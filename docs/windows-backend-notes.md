@@ -20,6 +20,8 @@ A workspace is created atomically using a protected security descriptor containi
 
 An up physical adapter without an IPv4 binding produces the native `CmdletizationQuery_NotFound,Get-NetIPAddress` error in Windows PowerShell. The script skips only that exact per-adapter no-match record. Permission failures and all other query errors still stop discovery. A PowerShell policy test evaluates the production script with synthetic command results to prove this distinction, physical/up selection and Preferred-state filtering; it does not count as a real-network test.
 
+The independent owner/ACE test uses the trusted absolute Windows PowerShell executable and .NET Framework `File.GetAccessControl`/`Directory.GetAccessControl`, without `Get-Acl` or other cmdlets. This preserves independent operating-system ACL inspection while removing an intermittent module-autoload failure observed in the Python 3.9 CI job; production security validation still uses its separate Win32 implementation.
+
 ## Primary references
 
 - [CreateFileW sharing modes and reparse flags](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
@@ -30,6 +32,8 @@ An up physical adapter without an IPv4 binding produces the native `Cmdletizatio
 - [FileRenameInfoEx information class](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ne-minwinbase-file_info_by_handle_class)
 - [GetSecurityInfo ownership, DACL and buffer lifetime](https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getsecurityinfo)
 - [ACE inheritance rules](https://learn.microsoft.com/en-us/windows/win32/secauthz/ace-inheritance-rules)
+- [Independent .NET Framework file ACL reads](https://learn.microsoft.com/en-us/dotnet/api/system.io.file.getaccesscontrol?view=netframework-4.8.1)
+- [Independent .NET Framework directory ACL reads](https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getaccesscontrol?view=netframework-4.8.1)
 - [Owner of a new object and token default owner](https://learn.microsoft.com/en-us/windows/win32/secauthz/owner-of-a-new-object)
 - [Volume persistent-ACL capability](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationw)
 - [GetTickCount64](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64)

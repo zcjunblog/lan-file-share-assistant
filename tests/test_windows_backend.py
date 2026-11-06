@@ -144,31 +144,63 @@ class WindowsNativeTests(unittest.TestCase):
         backend.check_private(child)
         self.assertEqual(backend.workspace(root), root)
         self.assertEqual(json.loads((root / '.lan-share-root').read_text()), {'version': 1})
-        # Independent ACL inspection by the operating system, not a backend mock.
-        script = ("$ErrorActionPreference='Stop';"
-                  "$s=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value;"
-                  "$items=@();$paths=ConvertFrom-Json $env:LAN_SHARE_TEST_PATHS;"
-                  "foreach($p in $paths){$a=Get-Acl -LiteralPath $p;"
-                  "$ids=@($a.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier])|"
-                  "ForEach-Object {$_.IdentityReference.Value});"
-                  "$items+=@{owner=$a.GetOwner([Security.Principal.SecurityIdentifier]).Value;ids=$ids}};"
-                  "@{sid=$s;items=$items}|ConvertTo-Json -Depth 6 -Compress")
-        result = subprocess.run(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command',
+        # Independent .NET Framework ACL reads, not backend ctypes or mocks.
+        # No cmdlets/autoloading: earlier native CI showed intermittent Get-Acl
+        # module-resolution failures unrelated to the ACL contract being tested.
+        script = r'''
+$ErrorActionPreference = 'Stop'
+$sid = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+[Console]::WriteLine('SID=' + $sid)
+$sections = [System.Security.AccessControl.AccessControlSections]::Owner -bor
+            [System.Security.AccessControl.AccessControlSections]::Access
+foreach ($path in $env:LAN_SHARE_TEST_PATHS.Split('|')) {
+    if ([System.IO.Directory]::Exists($path)) {
+        $acl = [System.IO.Directory]::GetAccessControl($path, $sections)
+    } else {
+        $acl = [System.IO.File]::GetAccessControl($path, $sections)
+    }
+    [Console]::WriteLine('OWNER=' + $acl.GetOwner([System.Security.Principal.SecurityIdentifier]).Value)
+    foreach ($rule in $acl.GetAccessRules($true, $true, [System.Security.Principal.SecurityIdentifier])) {
+        [Console]::WriteLine('ACE=' + $rule.IdentityReference.Value)
+    }
+    [Console]::WriteLine('END')
+}
+'''
+        executable = os.path.join(os.environ['SystemRoot'], 'System32', 'WindowsPowerShell',
+                                  'v1.0', 'powershell.exe')
+        result = subprocess.run([executable, '-NoProfile', '-NonInteractive', '-Command',
                                  script], capture_output=True, text=True,
                                 env=dict(os.environ,
                                          PSModulePath=os.path.join(os.environ['SystemRoot'],
                                              'System32', 'WindowsPowerShell', 'v1.0', 'Modules'),
-                                         LAN_SHARE_TEST_PATHS=json.dumps([str(root), str(child)])),
+                                         LAN_SHARE_TEST_PATHS='|'.join([str(root), str(child)])),
                                 timeout=15, check=False)
         if result.returncode:
             error = subprocess.CalledProcessError(result.returncode, result.args)
             error.native_stage = 'independent_acl_powershell'
             error.powershell_error_id = backend._powershell_error_id(result.stderr)
             raise error
-        acl = json.loads(result.stdout)
-        for item in acl['items']:
-            self.assertEqual(item['owner'], acl['sid'])
-            self.assertEqual(set(item['ids']), {acl['sid']})
+        lines = result.stdout.splitlines()
+        self.assertTrue(lines and lines[0].startswith('SID='))
+        sid, records, current = lines[0][4:], [], None
+        for line in lines[1:]:
+            if line.startswith('OWNER='):
+                self.assertIsNone(current)
+                current = {'owner': line[6:], 'ids': []}
+            elif line.startswith('ACE='):
+                self.assertIsNotNone(current)
+                current['ids'].append(line[4:])
+            elif line == 'END':
+                self.assertIsNotNone(current)
+                records.append(current)
+                current = None
+            else:
+                self.fail('Unexpected independent ACL response')
+        self.assertIsNone(current)
+        self.assertEqual(len(records), 2)
+        for item in records:
+            self.assertEqual(item['owner'], sid)
+            self.assertEqual(set(item['ids']), {sid})
 
     def test_private_replace_creates_new_name_and_refuses_untrusted_targets(self):
         root = backend.workspace(self.base / 'private')
