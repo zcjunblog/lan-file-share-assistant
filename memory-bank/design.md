@@ -1,7 +1,7 @@
 # 局域网文件分享助手 产品设计
 
 更新日期：2026-11-06（Asia/Shanghai）。
-当前阶段：项目初始化与设计准备，尚未实现服务或可导入Skill。
+当前阶段：M0项目初始化完成、设计准备就绪，尚未实现服务或可导入Skill。
 
 ## 1. 已确认需求与本轮范围
 
@@ -10,7 +10,7 @@
 - 创建分享之前必须检测本地配置是否支持；不支持时说明具体原因。
 - 本轮建立独立本地文件夹与GitHub仓库，补全memory-bank/design.md、todo.md及根目录Agent.md。
 - 延续既有生态的跨客户端方向，以标准Agent Skill为主体，按需提供WorkBuddy适配；不能承诺所有宿主都能运行本地网络服务。
-- 项目标识拟采用lan-file-share-assistant。仓库先保持私有，公开、许可证、收费和提审另行决定。
+- 项目标识采用lan-file-share-assistant。私有仓库已建立于https://github.com/zcjunblog/lan-file-share-assistant ，公开、许可证、收费和提审另行决定。
 
 后文运行方案、状态名、默认时间及具体限制属于设计提案，后续实现时验证和收敛，不写成用户逐项批准或已经实现。
 
