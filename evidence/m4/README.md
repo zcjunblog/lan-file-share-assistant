@@ -32,6 +32,14 @@
 
 正式README包含完整七步流程、示例、双包入口、依赖、接入、故障处理与验证矩阵。Windows/Linux统一写为实验性支持：原生CI通过，实际生产worker/局域网/Agent仍待设备验收。整机睡眠继续依用户要求暂缓。
 
+## 最终回归与CI
+
+本地87项回归：73通过、14项Windows原生检查跳过。新增12项分发测试纳入Windows2022/Ubuntu24.04各Python3.9/3.12的原生CI，四组全部成功；后端单测、独立调用probe和原生合成组件也保持通过。见[native-ci.json](native-ci.json)和[CI运行](https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42203566963)。
+
+首轮新增分发CI在Windows的解压源字节比较环节失败。独立Git autocrlf检出复现14项文本资源差异，增加仓库LF规范并明确PNG/ZIP为二进制后，新检出全部15项与最终标准包逐字节一致，四组CI通过。未改运行时逻辑、未更改交付归档摘要；见[检出复现](checkout-normalization.json)。本地既有检出若自行改了源文件或换行，严格字节检查会阻止，不静默认作同一候选包。
+
+生命周期验收在截止附近可能读到HTTP已撤销、worker仍清理的过渡态；脚本不展示该状态的入口，仅在有界等待后要求明确expired、资源已清理且监听已关闭。已补状态序列回归，并完整重跑最终归档验收。
+
 ## 复现
 
 ```sh

@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-06",
+  "source_commit": "3dbbcfb0d238b5404e21a2554eed43d7abc462a0",
+  "run_url": "https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42203566963",
+  "passed": true,
+  "repository_private": true,
+  "jobs": [
+    {
+      "job": "windows-2022 / Python 3.9",
+      "conclusion": "success",
+      "release_integrity_tests": {
+        "run": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      "backend_tests": {
+        "run": 24,
+        "passed": 22,
+        "skipped": 2
+      },
+      "native_components_passed": true
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.9",
+      "conclusion": "success",
+      "release_integrity_tests": {
+        "run": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      "backend_tests": {
+        "run": 24,
+        "passed": 10,
+        "skipped": 14
+      },
+      "native_components_passed": true
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.12",
+      "conclusion": "success",
+      "release_integrity_tests": {
+        "run": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      "backend_tests": {
+        "run": 24,
+        "passed": 10,
+        "skipped": 14
+      },
+      "native_components_passed": true
+    },
+    {
+      "job": "windows-2022 / Python 3.12",
+      "conclusion": "success",
+      "release_integrity_tests": {
+        "run": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      "backend_tests": {
+        "run": 24,
+        "passed": 22,
+        "skipped": 2
+      },
+      "native_components_passed": true
+    }
+  ],
+  "local_suite": {
+    "run": 87,
+    "passed": 73,
+    "windows_native_skipped": 14
+  },
+  "scope": "release_integrity_tests_and_native_synthetic_components",
+  "production_windows_linux_lan_and_agent": "not_tested",
+  "marketplace_parse_and_installed_final_agent": "not_tested"
+}

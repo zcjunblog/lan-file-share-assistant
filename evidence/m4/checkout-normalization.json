@@ -1,0 +1,15 @@
+{
+  "fresh_git_autocrlf_checkout_simulation": true,
+  "archive_sha256": "1f4af9d1c8e5a1473c8d0863fe3ca846e9b2cd1970940fac69b90df20e94e78d",
+  "results": [
+    {
+      "commit": "63f33e5",
+      "mismatched_resource_count": 14
+    },
+    {
+      "commit": "3dbbcfb",
+      "mismatched_resource_count": 0
+    }
+  ],
+  "runtime_code_changed": false
+}
