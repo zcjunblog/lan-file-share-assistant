@@ -1,0 +1,27 @@
+{
+  "browser": "Independent headless Chrome",
+  "liveLocalPage": true,
+  "viewports": [
+    {
+      "viewport": "desktop",
+      "width": 1280,
+      "horizontalOverflow": false,
+      "visibleFiles": 5,
+      "downloadLinks": 5,
+      "javascriptErrors": 0
+    },
+    {
+      "viewport": "mobile",
+      "width": 390,
+      "horizontalOverflow": false,
+      "visibleFiles": 5,
+      "downloadLinks": 5,
+      "javascriptErrors": 0
+    }
+  ],
+  "expiredClientState": {
+    "clockSimulated": true,
+    "linksDisabled": 5
+  },
+  "phoneTested": false
+}

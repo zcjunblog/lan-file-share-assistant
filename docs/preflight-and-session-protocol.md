@@ -164,3 +164,21 @@ python3.12 -m venv --system-site-packages .venv
 探针输出的本机地址、路径和进程详情仅在outputs中，默认不打印。使用tools/summarize_m1.py生成白名单字段摘要后才可纳入evidence/m1。以上命令不启动文件服务。
 
 依据：[Segno文档](https://segno.readthedocs.io/en/latest/)、[Segno包元数据](https://pypi.org/project/segno/)、[Python socket](https://docs.python.org/3/library/socket.html)、[Python time](https://docs.python.org/3/library/time.html)、[Python os](https://docs.python.org/3/library/os.html)、[Apple连续时钟](https://developer.apple.com/documentation/kernel/1646199-mach_continuous_time)、[Windows含休眠计时](https://learn.microsoft.com/en-us/windows/win32/sysinfo/interrupt-time)、[jsonschema文档](https://python-jsonschema.readthedocs.io/)。2026-11-06核对；运行时接口以所选解释器版本为准。
+
+## 10. M2实现补充（2026-11-06）
+
+协议1.0字段不变。实际源码位于skills/lan-file-share-assistant，独立于tools/m1_contract.py。M2工程范围进一步明确如下：
+
+- 当前只实现并放行macOS网卡、POSIX文件/私有目录和mach_continuous_time后端；Windows/Linux返回platform_unverified，不能使用推测的ACL或普通单调时钟绕过。原跨平台方案保留为后续待验收目标。
+- CLI的逐项--file是调用方具体授予的文件范围，--host-kind/--host-evidence必须来自独立的本机依据。生产CLI不接受自带授权的请求JSON。内部API也需要单独传入authorized_paths和host_attestation。
+- probe创建最长60秒、无网络的受控子进程；下一次独立工具调用需看到新心跳并验证受控停止，验证凭证最多有效30秒。启动进程必须在预检后30秒内接管任务，不能恢复旧会话。
+- 准备目标限时120秒；复制后的动态预检重新检查来源身份、当前地址、端口、依赖及空间。空间余量扣除已创建的本会话快照，避免重复预留同一份数据；文件内容/路径身份不一致立即失败。TTL不包含前面的复制阶段。
+- 首版运行目录使用显式新目录、0700及项目标记，私有文件0600；不接管已有普通目录。文件逐层使用dir_fd和O_NOFOLLOW打开，拒绝父级及最终符号链接、物理硬链接重复、管道、设备和越界参数。
+- 实际看门周期0.1秒，连接I/O超时0.75秒，最多8个请求处理线程及2个下载传输。到期先撤销访问，主动关闭已接收连接，再停止监听与清理，不依赖正在发送数据的线程自行苏醒。
+- HTTP路由只包括精确会话页、files/<file_id>与受访问凭据保护的health。health用随机挑战及会话归属回读核验，初次启动还逐项HEAD验证快照访问，之后status/stop的归属检查不争用文件传输配额，避免忙时无法停止。
+- 前端使用无外部资源的白蓝模板，名称HTML转义，脚本CSP摘要授权。Host必须是选定IP及实际端口，跨来源Origin拒绝；不提供CORS、目录路由或控制HTTP端点。
+- 停止控制仅为私有本地原子文件，校验会话、owner_instance、独立控制令牌和30秒请求时效。准备阶段也可响应停止；不按PID或端口杀进程。
+- 新增细分原因包括scope_unconfirmed、request_invalid、platform_unverified、preflight_expired、preflight_failed、preparation_timeout、health_unverified、owner_unverified、heartbeat_stale、cleanup_incomplete。异常只记录类型或错误码，不记录可能含路径/凭据的异常原文。
+- 状态写入失败时仍尝试关闭所属服务及清理；如果宿主强制终止或系统异常留下状态目录，返回无法核验，不恢复旧凭据。M2不自动清理无法验证归属的遗留会话。
+
+M2的本机实际链路、60秒过期、进行中传输和手动停止证据见[evidence/m2](../evidence/m2/README.md)。真实手机、系统睡眠/时钟变更与目标客户端结果仍单列M3。

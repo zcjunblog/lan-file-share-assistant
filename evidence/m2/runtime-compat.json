@@ -1,0 +1,9 @@
+{
+  "python_core_cli_checked": "3.9.6",
+  "system_python_missing_qr_correctly_blocked": true,
+  "production_test_python": "3.12.14",
+  "schema_and_m1_semantic_validation": true,
+  "historical_production_reports_checked": 2,
+  "skill_frontmatter_valid": true,
+  "non_macos_runtime_admitted": false
+}

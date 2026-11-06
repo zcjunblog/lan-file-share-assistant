@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "platform": "macOS",
+  "local_http_end_to_end": true,
+  "production_preflight_eight_passed": true,
+  "cross_tool_status_health": true,
+  "qr_independent_decode": true,
+  "downloaded_files_hash_matched": 5,
+  "source_files_unchanged": true,
+  "auth_host_and_path_rejections": true,
+  "phone_scanned": false,
+  "receiver_status": "not_tested",
+  "ttl_seconds": 60,
+  "actual_expiry": true,
+  "active_transfer_interrupted": true,
+  "temporary_resources_removed": true,
+  "listener_closed": true,
+  "expiry_check_delay_seconds": 0.677
+}

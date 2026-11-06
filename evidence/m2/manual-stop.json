@@ -1,0 +1,9 @@
+{
+  "manual_stop": true,
+  "owned_control_verified": true,
+  "wrong_control_token_rejected": true,
+  "two_active_transfers_interrupted": true,
+  "temporary_resources_removed": true,
+  "listener_closed": true,
+  "stop_elapsed_seconds": 0.096
+}
