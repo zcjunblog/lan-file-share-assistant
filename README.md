@@ -1,105 +1,160 @@
-<p align="center"><img src="skills/lan-file-share-assistant/assets/icon-512.png" width="76" alt="局域网文件分享助手 Logo"></p>
+<p align="center">
+  <img src="docs/images/cover.png" width="100%" alt="局域网文件分享助手：指定文件、扫码下载、自动过期">
+</p>
+
 <h1 align="center">局域网文件分享助手</h1>
-<p align="center"><strong>选定文件，扫码下载，按时关闭。</strong><br>LAN File Share Assistant · 面向本地 Agent 的临时文件交付 Skill</p>
+<p align="center"><strong>让 Agent 生成的文件，顺畅抵达另一台设备。</strong></p>
+<p align="center">LAN File Share Assistant<br>面向本地 Agent 的临时文件交付 Skill</p>
 
-![局域网文件分享助手：指定文件、扫码下载、自动过期](docs/images/cover.png)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2866b8?style=flat-square" alt="MIT License"></a>
+  <a href="releases/0.1.0/manifest.json"><img src="https://img.shields.io/badge/version-0.1.0-2866b8?style=flat-square" alt="Version 0.1.0"></a>
+  <img src="https://img.shields.io/badge/Python-3.9%2B-183450?style=flat-square" alt="Python 3.9 or newer">
+  <a href="https://github.com/zcjunblog/lan-file-share-assistant/actions/workflows/native-platforms.yml"><img src="https://github.com/zcjunblog/lan-file-share-assistant/actions/workflows/native-platforms.yml/badge.svg?branch=main" alt="Native platform CI"></a>
+</p>
+<p align="center">
+  <a href="#核心能力">核心能力</a> ·
+  <a href="#快速开始">快速开始</a> ·
+  <a href="#工作流程">工作流程</a> ·
+  <a href="#下载体验">下载体验</a> ·
+  <a href="#兼容性与验证">兼容性与验证</a> ·
+  <a href="#参与贡献">参与贡献</a>
+</p>
 
-从需求确认书、图文操作手册到图片与资料包，让 Agent 生成的文件抵达另一台设备。助手先检测文件所在电脑的运行条件，再准备私有副本和限时下载页面；接收方通过浏览器扫码取件，分享结束后关闭连接并清理临时资料。
+需求确认书写好了，操作手册生成了，图片和资料包也已准备完成。下一步，可以直接对 Agent 说：
 
-**0.1.0 发布候选** · [标准 Skill 包](releases/0.1.0/lan-file-share-assistant-0.1.0.zip) · [WorkBuddy 包](releases/0.1.0/lan-file-share-assistant-workbuddy-0.1.0.zip) · [安装与兼容性](docs/compatibility.md) · [校验摘要](releases/0.1.0/SHA256SUMS)
+> **把刚生成的文件分享给我的手机，十分钟后关闭。**
 
-当前已完成原生系统CI；macOS的Codex执行工具、WorkBuddy开发版及最终安装包已有实际链路验证。**Windows/Linux为实验性支持**，真实局域网与客户端仍待补验。新版最终包已完成WorkBuddy本机安装验收，仓库保持私有；**0.1.0已提交WorkBuddy审核，尚未确认上线**，详见[发布记录](docs/marketplace/submission.md)。
+局域网文件分享助手先检测文件所在电脑的运行条件，再为明确选定的文件创建私有快照、限时下载页和本地二维码。接收方通过浏览器保存文件，无需安装专用接收应用；到期或提前停止后，由后台程序关闭连接并清理临时资料。
 
-## 为文件交付准备
+适合办公交接、项目交付、培训资料分发，以及 Agent 产物的跨设备取用。支持标准 Agent Skills 目录，并提供独立的 WorkBuddy 导入包。
 
-| 能力 | 实际行为 |
+## 核心能力
+
+| 能力 | 交付方式 |
 | --- | --- |
-| 分享前检测 | 核对执行位置、运行时、文件、任务目录、二维码、网卡、绑定和生命周期；缺少条件时给出原因与复检步骤 |
-| 范围明确 | 仅处理逐项授权的普通文件，以私有快照提供下载；原文件保持只读 |
-| 扫码取件 | 本机生成PNG/SVG二维码和移动端下载页，接收方无需安装专用应用 |
-| 限时访问 | 默认10分钟，支持1至60分钟；后台程序执行截止时间，刷新页面不会续期 |
-| 随时结束 | 提前停止本次会话，中断进行中的传输，撤销凭据并清理临时副本 |
+| **先检测，再分享** | 检查执行位置、运行时、文件、专用目录、二维码、网卡、端口及进程生命周期；缺少条件时给出原因与复检步骤 |
+| **文件范围明确** | 仅处理用户逐项授权的普通文件，原文件只读，以本次私有快照提供下载 |
+| **扫码即可取件** | 本机生成PNG/SVG二维码，接收方通过同一可互通局域网的浏览器下载 |
+| **分享自动过期** | 默认10分钟，可选1至60分钟；截止由后台程序执行，刷新页面不会续期 |
+| **可以提前结束** | 校验本次会话归属后停止分享，中断进行中的传输，撤销凭据并清理临时副本 |
 
-每次可选1至20个文件，单个不超过2GiB、合计不超过5GiB。macOS已完成5GiB合成本机HTTP容量验证；真实跨设备吞吐和其他系统大文件行为仍待验收。
+每次支持1至20个指定文件，单个不超过2GiB、合计不超过5GiB。macOS已完成5GiB合成本机HTTP验证，真实跨设备吞吐和其他系统的大文件行为仍待验收。
 
-## 从选择到交付
+## 快速开始
 
-![七步文件分享流程](docs/images/workflow.svg)
+### 1. 获取 Skill
 
-1. **确定范围**：选择本次分享的文件、标题与有效期，确认程序运行在文件所在电脑。
-2. **检查配置**：八项预检全部通过才允许继续；条件不满足时说明具体失败项。
-3. **准备副本**：复制到本次私有会话目录，核对文件身份与内容摘要。
-4. **启动自检**：启动服务，并在下一次独立工具调用中核验状态和本机健康。
-5. **交付入口**：展示已验证的二维码、链接、文件清单、截止时间与停止方式。
-6. **接收下载**：手机或另一台电脑连接可互通局域网，通过浏览器保存文件。
-7. **结束分享**：到期自动关闭，或由用户提前停止；核实监听及临时资料的实际状态。
+| 使用方式 | 入口 |
+| --- | --- |
+| 通用 Agent 客户端 | [下载标准 Skill 包](https://raw.githubusercontent.com/zcjunblog/lan-file-share-assistant/main/releases/0.1.0/lan-file-share-assistant-0.1.0.zip) |
+| WorkBuddy 自定义技能导入 | [下载 WorkBuddy 包](https://raw.githubusercontent.com/zcjunblog/lan-file-share-assistant/main/releases/0.1.0/lan-file-share-assistant-workbuddy-0.1.0.zip) |
+| 直接使用源码 | [skills/lan-file-share-assistant](skills/lan-file-share-assistant/SKILL.md) |
+| 核验归档 | [SHA256SUMS](releases/0.1.0/SHA256SUMS) · [逐文件清单](releases/0.1.0/manifest.json) |
 
-本机自检通过与接收方下载成功分别记录。二维码和链接包含访问凭据，应仅交给本次接收者；本项目不会将它们上传到外部二维码服务。
+解压后保留整个`lan-file-share-assistant`目录，按客户端规则导入。标准包和WorkBuddy包使用相同业务文件，后者仅扩展展示元数据和三组双语示例。
 
-## 对 Agent 这样说
+### 2. 准备本机运行环境
 
-> 把刚生成的需求确认书分享给我的手机，先检测本地配置，十分钟后关闭。
+需要能够在**文件所在电脑**执行Python并维持后台进程的本地Agent。使用源码时，macOS/Linux可在项目目录准备独立环境：
 
-> 将我指定的这三份操作手册生成局域网扫码下载页，五分钟后自动过期。
+```sh
+git clone https://github.com/zcjunblog/lan-file-share-assistant.git
+cd lan-file-share-assistant
+python3 -m venv .venv
+.venv/bin/python -m pip install -r skills/lan-file-share-assistant/requirements.txt
+```
+
+运行要求为Python3.9+，二维码直接依赖Segno1.6.6。文件传输和二维码生成不依赖模型API、外部二维码服务或公网中转；准备依赖时可能需要联网。
+
+常见项目级安装位置：Codex使用`.agents/skills/`，Claude Code使用`.claude/skills/`，Cursor使用`.cursor/skills/`；其他客户端使用其明确支持的Skills目录或导入功能。完整目录规则、Windows命令和系统要求见[安装与兼容性](docs/compatibility.md)。目录接入与实际运行能力分别验证。
+
+### 3. 在对话中选择文件
+
+> 使用局域网文件分享助手，把刚生成的需求确认书分享给我的手机，先检测本地配置，十分钟后关闭。
+
+> 将我指定的三份操作手册生成扫码下载页，五分钟后自动过期。
 
 > 停止刚才的文件分享，确认下载入口已关闭、临时副本已清理。
 
-“刚生成的文件”应由当前任务的实际产物清单确定。助手不会据此扫描桌面、共享整个目录或自动扩大文件范围。
+Agent会核对实际产物与授权范围，执行预检并在独立工具调用中确认服务状态。只有`ready`且`can_publish=true`，才会展示真实链接、二维码、文件清单和截止时间。客户端无法确认本机执行位置或维持后台进程时，会说明原因并停止创建。
+
+## 工作流程
+
+![从选定文件到结束分享的七步流程](docs/images/workflow.svg)
+
+| 阶段 | 处理内容 | 可以查看的结果 |
+| --- | --- | --- |
+| **01 · 确定范围** | 核对指定文件、分享标题与有效期 | 本次文件清单与运行位置 |
+| **02 · 本机预检** | 执行八项检查，确认跨调用进程存活 | 逐项结论、失败原因与复检方法 |
+| **03 · 准备快照** | 复制私有副本，核对来源身份和内容摘要 | 固定的文件版本与准备状态 |
+| **04 · 启动自检** | 绑定选定接口，独立核验健康和文件访问 | 可发布的真实就绪状态 |
+| **05 · 交付入口** | 展示本地二维码、链接、截止时间与停止方式 | 本次接收者使用的限时入口 |
+| **06 · 接收下载** | 在另一台同网设备浏览并保存文件 | 接收方实际下载结果 |
+| **07 · 结束分享** | 到期自动关闭，或用户提前停止 | 监听、凭据与临时副本清理状态 |
+
+本机自检与另一设备下载分别记录。分享入口包含访问凭据，应只交给本次接收者；页面刷新、再次扫码和下载失败不会自动延长有效期。重新分享需要新建会话。
 
 ## 下载体验
 
-白蓝页面优先适配移动端，提供文件名称、大小、剩余时间与下载入口。中文长文件名自动换行，页面与后端分别执行失效处理。
+白蓝页面优先适配移动端，展示文件名称、大小、剩余时间与下载入口。中文长文件名自动换行，页面与服务端分别执行截止控制。
 
-![实际下载页，展示合成测试资料](evidence/m2/download-desktop.png)
+![合成资料的实际下载页面](evidence/m2/download-desktop.png)
 
 [手机宽度](evidence/m2/download-mobile.png) · [页面失效状态](evidence/m2/download-expired-mobile.png)
 
-封面为产品示意图；上方下载页面来自合成资料的实际浏览器验证。服务关闭后浏览器可能直接显示无法连接，已保存到接收端的副本不会被撤回。
+封面为标注过的界面示意图，下载页面截图来自合成资料的实际浏览器验证。服务关闭后，浏览器可能直接显示无法连接。已保存到接收端的副本不会被撤回。
 
-## 安装与运行
+## 兼容性与验证
 
-需要**能够在文件所在电脑执行程序并维持后台服务的本地 Agent**，以及Python3.9+。二维码直接依赖Segno1.6.6，不需要模型API或云端二维码服务；准备Python依赖时可能需要联网。
-
-| 分发形式 | 接入方式 |
+| 环境 | 当前范围 |
 | --- | --- |
-| 标准Skill | 解压标准包，将整个`lan-file-share-assistant`目录放入客户端支持的Skills目录，保留入口和所有子资源 |
-| WorkBuddy | 使用WorkBuddy包导入；该包添加展示信息和三组双语示例，业务脚本与标准包一致 |
-| 仓库源码 | 标准入口位于[skills/lan-file-share-assistant](skills/lan-file-share-assistant/SKILL.md)，可直接按客户端规则接入 |
+| **macOS** | Codex执行工具、WorkBuddy5.9.3及0.1.0最终安装包完成本机链路；已有手机内容回读和停止后旧链接失效反馈 |
+| **Windows · 实验性** | Windows2022 × Python3.9/3.12原生CI通过，包含安全文件/ACL、后台探针、环回下载、停止和实际短时到期组件 |
+| **Linux · 实验性** | Ubuntu24.04 × Python3.9/3.12原生CI通过，包含文件/权限、后台探针、环回下载、停止和实际短时到期组件 |
+| **其他 Agent** | 标准Skill格式可以接入，后台执行与网络能力需要在具体客户端验证 |
 
-依赖应安装到选定的任务虚拟环境，不修改全局Python。具体命令、常见客户端路径与系统要求见[安装与兼容性](docs/compatibility.md)，命令流程与故障处理见[运行参考](skills/lan-file-share-assistant/references/runtime.md)。安装目录适配不代表所有客户端都能提供后台网络服务。
+最终WorkBuddy安装验收按四次独立调用完成probe、start、status与下载、stop；10,600字节的源文件、状态摘要和下载副本一致。归档另完成独立解压、二维码回读、提前停止与真实60秒自然到期检查。当前本地回归为73项通过、14项Windows原生测试按环境跳过。
 
-## 验证范围
+Windows/Linux完整生产worker、传输中截止、真实LAN与Agent仍待设备验收；云端CI不替代这些结果。整机睡眠恢复、实际系统时钟变更、整个宿主退出和手机保存副本摘要也仍待补验。
 
-| 范围 | 当前证据 |
-| --- | --- |
-| macOS | Codex执行工具与WorkBuddy V5.9.3开发包已完成本机链路；用户手机内容回读和停止后旧链接失效已有反馈 |
-| Windows，实验性 | Windows 2022的Python3.9/3.12原生CI通过；安全文件/ACL、跨调用探针、环回下载、停止与实际短时到期组件已验证 |
-| Linux，实验性 | Ubuntu 24.04的Python3.9/3.12原生CI通过；安全文件/权限、跨调用探针、环回下载、停止与实际短时到期组件已验证 |
-| 发布候选归档 | 标准包与WorkBuddy包分别解压运行，原始文件、快照及下载摘要独立核对；结果见M4验收记录 |
+**WorkBuddy0.1.0已提交审核，尚未确认上线。** GitHub源码、导入包与平台审核状态分别记录。
 
-Windows/Linux完整生产worker、传输中截止、真实局域网扫码和具体Agent尚待设备验收。用户暂缓整机睡眠；真实系统时钟变更、整个宿主退出和手机保存副本的独立摘要也仍待补。新Logo最终包的平台解析与WorkBuddy安装后Agent烟测均已通过，当前已提交审核。
+[系统验收](evidence/platforms/README.md) · [最终包与提审记录](evidence/release/README.md) · [归档验收](evidence/m4/README.md) · [容量补验](evidence/m3/continuation.md)
 
-[跨平台CI证据](evidence/platforms/README.md) · [既有客户端与手机记录](evidence/m3/README.md) · [容量和运行时补验](evidence/m3/continuation.md) · [M4归档验收](evidence/m4/README.md)
+## 运行要求与边界
 
-## 使用边界
+- 在可信、可互通的局域网使用，**HTTP未加密**。防火墙、访客网络、AP隔离和客户端权限会影响接收方访问。
+- 只绑定经过核对的物理IPv4私有接口；不自动关闭防火墙、修改VPN/路由、绑定所有网卡或开启公网穿透。
+- 使用新的专用运行目录和足够磁盘空间。Windows要求本机固定卷与原生私有ACL，拒绝UNC、网络卷、备用数据流及重解析点。
+- 首版提供下载，不提供上传、目录共享、长期托管、设备自动发现、HTTPS或已下载副本撤回。
 
-用于可信、可互通的局域网，**HTTP未加密**。防火墙、访客网络、AP隔离和客户端权限会影响其他设备的访问；助手不会自动关闭防火墙、修改路由/VPN或开启公网穿透。
+遇到问题时，按`reason_code`和`remediation`区分运行环境、文件、权限、接口、绑定及生命周期故障，再单独检查接收方网络。命令与处理方式见[运行参考](skills/lan-file-share-assistant/references/runtime.md)。
 
-首版提供下载，不提供上传、目录共享、长期托管、设备自动发现、HTTPS或已下载副本撤回。只看到云端、容器或未知执行位置时，生产预检会阻止创建分享。
+## 开发与构建
 
-## 开发与维护
-
-运行依赖与开发验证分开。开发示例使用Python3.12：
+运行依赖与开发验证分开，开发示例使用Python3.12：
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements-m2-dev.txt
 .venv/bin/python -m unittest discover -s tests -v
+.venv/bin/python tools/check_m2_repository.py
 .venv/bin/python tools/build_release.py
 ```
 
-两个归档共享单一版本源`skills/lan-file-share-assistant/VERSION`，只在WorkBuddy入口元数据上存在差异。构建输出含逐文件摘要、归档SHA-256和完整清单。合成服务验收须按[M4记录](evidence/m4/README.md)显式执行，本机地址、二维码、凭据和原始状态均保存在忽略目录。
+两个包共用`skills/lan-file-share-assistant/VERSION`和显式资源登记。构建输出包含归档与逐文件SHA-256；已提交市场的包按记录保留摘要。开发测试与分享产生的文件、地址、二维码、凭据和原始状态只写入忽略目录。
 
-[产品设计](memory-bank/design.md) · [开发待办](memory-bank/todo.md) · [预检协议](docs/preflight-and-session-protocol.md) · [协作约定](Agent.md)
+完整生产链路验收会短时启动局域网服务，按[归档验收说明](evidence/m4/README.md)显式执行。CI仅使用合成文件，日志输出脱敏检查摘要，结束后清理其拥有的资源。
 
-GitHub源码公开、许可证与后续定价另行决定；本次WorkBuddy页面显示免费，审核状态见发布记录。维护者：[zcjunblog](https://github.com/zcjunblog)。
+## 参与贡献
+
+欢迎提交Issue、改进文档或参与PR，尤其欢迎补充Windows/Linux真实设备与不同Agent客户端的验收结果。反馈时记录系统、Python、客户端版本、复现步骤和实际结果，使用合成资料并移除私有运行信息。
+
+[贡献指南](CONTRIBUTING.md) · [提交问题](https://github.com/zcjunblog/lan-file-share-assistant/issues) · [产品设计](memory-bank/design.md) · [开发待办](memory-bank/todo.md)
+
+## 开源许可
+
+本项目采用[MIT许可证](LICENSE)。使用、修改或再分发时请保留版权与许可声明；第三方依赖遵循其各自许可证。图标与封面的来源和制作方式见[视觉记录](docs/marketplace/icon-generation.md)。
+
+维护者：[zcjunblog](https://github.com/zcjunblog)。

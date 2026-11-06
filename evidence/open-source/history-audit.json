@@ -1,0 +1,9 @@
+{
+  "scope": "all locally available Git refs and ZIP contents",
+  "git_objects_checked": 367,
+  "historical_blobs_checked": 213,
+  "historical_archives_checked": 4,
+  "known_private_values_absent": true,
+  "credential_patterns_absent": true,
+  "raw_runtime_outputs_ignored": true
+}

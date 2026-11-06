@@ -21,7 +21,6 @@ permissions:
 
 jobs:
   native:
-    if: github.event.repository.private == true
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
@@ -35,7 +34,7 @@ jobs:
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       # Official v6 refs resolved through the GitHub REST API on 2026-11-06.
-      - name: Check out private source
+      - name: Check out source
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
@@ -59,5 +58,5 @@ jobs:
         if: always()
         run: python tools/native_platform_acceptance.py cleanup
       # Deliberately no artifact upload: raw state/QR/credentials remain private.
-      # NATIVE_SUMMARY_JSON is the only acceptance report; its scope explicitly
+      # Logs contain whitelisted JSON test/component summaries only. Their scope
       # excludes production LAN, real Agent clients, and real system sleep.
