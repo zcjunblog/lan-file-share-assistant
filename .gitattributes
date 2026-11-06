@@ -1,0 +1,4 @@
+# Keep audited source bytes equal to the portable archives on every checkout.
+* text=auto eol=lf
+*.png binary
+*.zip binary

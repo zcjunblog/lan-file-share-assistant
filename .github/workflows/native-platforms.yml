@@ -4,6 +4,7 @@ on:
   push:
     branches: [feat/cross-platform, feat/m4-release, main]
     paths:
+      - '.gitattributes'
       - '.github/workflows/native-platforms.yml'
       - 'skills/**'
       - 'tests/**'

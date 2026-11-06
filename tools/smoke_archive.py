@@ -26,7 +26,9 @@ PAYLOAD = ('Synthetic release acceptance only.\n合成资料：需求确认书�
 
 def require(value, label):
     if not value:
-        raise RuntimeError(label)
+        error = RuntimeError(label)
+        error.native_stage = label  # Fixed labels only; safe in hosted test diagnostics.
+        raise error
 
 
 def read(path):
