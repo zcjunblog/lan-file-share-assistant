@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "same_lan_phone_user_participated": true,
+  "qr_shared_after_cross_call_self_check": true,
+  "user_returned_file_code": true,
+  "returned_code_matched_source": true,
+  "manual_stop_resources_removed": true,
+  "user_confirmed_old_link_unavailable_after_stop": true,
+  "phone_os": "not_provided",
+  "browser": "not_provided",
+  "receiver_byte_sha256_verified": false,
+  "evidence_kind": "user_report_plus_local_session_verification",
+  "limitations": [
+    "手机系统和浏览器未提供，不猜测具体机型兼容。",
+    "验收码匹配证明测试内容可取得；未独立计算手机保存副本的字节SHA-256。"
+  ]
+}

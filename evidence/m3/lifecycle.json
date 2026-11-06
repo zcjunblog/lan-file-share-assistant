@@ -1,0 +1,16 @@
+{
+  "repeated_sessions_independent": true,
+  "repeated_get_does_not_extend_ttl": true,
+  "cross_session_file_rejected": true,
+  "stopping_one_preserves_other": true,
+  "repeated_stop_idempotent": true,
+  "owned_sigkill_listener_closed": true,
+  "forced_exit_never_reports_ready": true,
+  "forced_exit_leaves_private_resources": true,
+  "owned_test_resources_manually_cleaned": true,
+  "process_pause_resume_expired": true,
+  "resume_to_cleanup_seconds": 0.079,
+  "real_system_sleep_tested": false,
+  "system_clock_changed": false,
+  "source_unchanged": true
+}

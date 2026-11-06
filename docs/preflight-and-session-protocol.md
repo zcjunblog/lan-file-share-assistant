@@ -182,3 +182,13 @@ python3.12 -m venv --system-site-packages .venv
 - 状态写入失败时仍尝试关闭所属服务及清理；如果宿主强制终止或系统异常留下状态目录，返回无法核验，不恢复旧凭据。M2不自动清理无法验证归属的遗留会话。
 
 M2的本机实际链路、60秒过期、进行中传输和手动停止证据见[evidence/m2](../evidence/m2/README.md)。真实手机、系统睡眠/时钟变更与目标客户端结果仍单列M3。
+
+## 11. M3修订（协议1.0字段不变）
+
+- 私有状态、凭据、来源清单和请求配置写入均纳入启动错误保护；失败时撤销已创建敏感文件，核实后才报告temporary_resources_removed。无法写终态不阻止先尝试撤销凭据；无法删除则报告cleanup_incomplete。
+- 状态JSON不可解析时，status/stop返回unverified_stale及state_unreadable，不返回旧URL，不猜测归属或删除残留。
+- 接口发现结果再次独立复核RFC1918，不仅依赖发现适配器通常过滤回环的假设。
+- 短期限包含ready之后的Agent调用与交付时间。WorkBuddy首轮60秒下载前到期，第二轮合并独立status与下载后通过；probe仍须与后续执行跨独立调用，不允许静默续期。
+- SIGKILL会使OS关闭监听但可能留下私有目录，因此无法验证的状态不展示链接；不能宣传所有异常均自动清理。
+
+用户手机内容回读、停止后失效和WorkBuddy本机链路见[evidence/m3](../evidence/m3/README.md)。整机睡眠本轮由用户明确暂缓，Windows/Linux真机及手机保存副本摘要仍未验证。

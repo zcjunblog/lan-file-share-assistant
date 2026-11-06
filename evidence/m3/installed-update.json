@@ -1,0 +1,15 @@
+{
+  "client": "WorkBuddy V5.9.3",
+  "duplicate_import_rejected_by_ui": true,
+  "update_method": "Atomic local file replacement of the one owned skill after exact original-archive match",
+  "original_archive_preserved": true,
+  "changed_files": 4,
+  "all_source_files_match_repository": true,
+  "source_files_checked": 10,
+  "updated_cli_preflight_checked": true,
+  "missing_lifecycle_probe_correctly_blocks": true,
+  "updated_cli_check_host": "Codex execution tool on same Mac",
+  "updated_full_workbuddy_agent_run": false,
+  "formal_release_install_smoke_pending": true,
+  "development_archive_sha256": "9a8b42711102ef37caf5b3977831aebe61618da5b11b5a5bfd45d55e1ba0ab2d"
+}

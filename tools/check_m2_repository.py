@@ -13,7 +13,7 @@ def main():
     paths = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT).decode().split('\0')
     paths = [p for p in paths if p and (ROOT / p).is_file()]
     forbidden = {str(Path.home()).encode()}
-    for p in (ROOT / 'outputs/m2').rglob('*.json'):
+    for p in (ROOT / 'outputs').rglob('*.json'):
         try:
             value = json.loads(p.read_text())
         except (ValueError, OSError):
@@ -51,7 +51,7 @@ def main():
                 local = target.split('#')[0].strip('<>')
                 if local and not (p.parent / local).exists():
                     failures.append((rel, 'broken_local_link'))
-    ignored = ['outputs/m2/synthetic-files/合成空白文档.pdf', 'outputs/m2/active.json',
+    ignored = ['outputs/m2/synthetic-files/合成空白文档.pdf', 'outputs/m2/active.json', 'outputs/m3/phone-active.json', 'outputs/m3/lan-file-share-assistant-m3-test.zip',
                'outputs/m2/runtime/share-test/secrets.json', 'sessions/private.json', 'share-qr-private.png']
     for rel in ignored:
         if subprocess.run(['git', 'check-ignore', '-q', rel], cwd=ROOT).returncode:

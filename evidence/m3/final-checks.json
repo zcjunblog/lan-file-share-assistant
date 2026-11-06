@@ -1,0 +1,12 @@
+{
+  "test_sessions_checked": 6,
+  "all_test_sessions_terminal": true,
+  "all_test_listeners_closed": true,
+  "all_session_sensitive_resources_removed": true,
+  "installed_skill_matches_current_source": true,
+  "automated_methods_passed": 48,
+  "automated_methods_skipped": 0,
+  "real_sleep_deferred_by_user": true,
+  "m3_all_external_acceptance_complete": false,
+  "marketplace_submitted": false
+}

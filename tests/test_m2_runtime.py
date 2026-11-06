@@ -171,17 +171,25 @@ class PreflightTests(Fixture):
         self.assertFalse(report['can_start'])
 
     def test_port_collision_does_not_close_foreign_listener(self):
-        address = '127.0.0.1'
+        try:
+            candidates = core.interfaces()
+        except core.ShareError:
+            self.skipTest('No verified local adapter backend')
+        if not candidates:
+            self.skipTest('No active physical RFC1918 interface')
+        address = candidates[0]['address']
         with socket.socket() as occupied:
             occupied.bind((address, 0))
             occupied.listen()
-            req = dict(self.req, port=occupied.getsockname()[1])
-            # Inject adapter metadata only inside this test; CLI rejects loopback.
+            req = dict(self.req, bind_address=address, port=occupied.getsockname()[1])
+            # Real occupied local RFC1918 port; no user files are served.
             with patch('preflight.interfaces', return_value=[{'address': address}]), patch('preflight.verify_probe'):
                 normalized, report, _ = preflight.run(req, self.root, req['file_paths'], req['host_context'])
             self.assertIn('port_in_use', [c['reason_code'] for c in report['checks']])
             self.assertFalse(report['can_start'])
             self.assertEqual(occupied.getsockname()[1], req['port'])
+            with socket.create_connection((address, req['port']), timeout=.2):
+                pass
 
     def test_stale_status_cannot_publish_or_stop_by_pid(self):
         root = core.workspace(self.root)

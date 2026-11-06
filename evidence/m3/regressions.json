@@ -1,0 +1,22 @@
+{
+  "failing_regressions_before_fix": 3,
+  "passing_methods_after_fix": 48,
+  "fixes": [
+    "Partial setup write failure revokes credentials before returning failure.",
+    "Corrupt state returns unverified_stale without exposing an old URL.",
+    "Discovered adapter address is independently checked as RFC1918 before binding."
+  ],
+  "fault_injection": [
+    "Disk full during private request write",
+    "Network bind denied",
+    "Execution denied",
+    "Platform backend labels simulated"
+  ],
+  "actual_os_checks": [
+    "Read-only owned workspace",
+    "Unreadable owned synthetic file",
+    "Real occupied RFC1918 port remains open",
+    "Idle HTTP sockets close on revocation"
+  ],
+  "production_runtime_dependencies_unchanged": true
+}

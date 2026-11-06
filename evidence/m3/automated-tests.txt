@@ -1,0 +1,53 @@
+test_deadline_cases (test_m1_contract.ContractTests.test_deadline_cases) ... ok
+test_failure_needs_remediation (test_m1_contract.ContractTests.test_failure_needs_remediation) ... ok
+test_fake_pass_and_tampered_verdict_rejected (test_m1_contract.ContractTests.test_fake_pass_and_tampered_verdict_rejected) ... ok
+test_fixture_is_not_production_evidence (test_m1_contract.ContractTests.test_fixture_is_not_production_evidence) ... ok
+test_invalid_time_and_lifetime_rejected (test_m1_contract.ContractTests.test_invalid_time_and_lifetime_rejected) ... ok
+test_missing_and_duplicate_checks_rejected (test_m1_contract.ContractTests.test_missing_and_duplicate_checks_rejected) ... ok
+test_not_tested_cannot_pass (test_m1_contract.ContractTests.test_not_tested_cannot_pass) ... ok
+test_preflight_does_not_publish_or_verify_receiver (test_m1_contract.ContractTests.test_preflight_does_not_publish_or_verify_receiver) ... ok
+test_report_cases (test_m1_contract.ContractTests.test_report_cases) ... ok
+test_report_requires_fresh_time_and_matching_request (test_m1_contract.ContractTests.test_report_requires_fresh_time_and_matching_request) ... ok
+test_request_cases (test_m1_contract.ContractTests.test_request_cases) ... ok
+test_unknown_top_level_fields_are_rejected (test_m1_contract.ContractTests.test_unknown_top_level_fields_are_rejected) ... ok
+test_deadline_wall_forward_rollback_and_continuous (test_m2_runtime.FileTests.test_deadline_wall_forward_rollback_and_continuous) ... ok
+test_exact_independent_scope (test_m2_runtime.FileTests.test_exact_independent_scope) ... ok
+test_file_count_directories_fifo_and_duplicate (test_m2_runtime.FileTests.test_file_count_directories_fifo_and_duplicate) ... ok
+test_mid_copy_mutation_and_path_swap_blocked (test_m2_runtime.FileTests.test_mid_copy_mutation_and_path_swap_blocked) ... ok
+test_parameter_limits_and_types (test_m2_runtime.FileTests.test_parameter_limits_and_types) ... ok
+test_path_traversal_relative_and_glob_rejected (test_m2_runtime.FileTests.test_path_traversal_relative_and_glob_rejected) ... ok
+test_private_workspace_no_adoption (test_m2_runtime.FileTests.test_private_workspace_no_adoption) ... ok
+test_snapshot_immutable_source_replacement_detected (test_m2_runtime.FileTests.test_snapshot_immutable_source_replacement_detected) ... ok
+test_symlink_ancestors_and_hardlink_alias_rejected (test_m2_runtime.FileTests.test_symlink_ancestors_and_hardlink_alias_rejected) ... ok
+test_authoritative_deadline_denies_refresh_and_download (test_m2_runtime.HTTPTests.test_authoritative_deadline_denies_refresh_and_download) ... ok
+test_exact_snapshot_hash_and_header (test_m2_runtime.HTTPTests.test_exact_snapshot_hash_and_header) ... ok
+test_health_nonce_and_owner (test_m2_runtime.HTTPTests.test_health_nonce_and_owner) ... ok
+test_html_escape_and_no_external_resources (test_m2_runtime.HTTPTests.test_html_escape_and_no_external_resources) ... ok
+test_revoke_closes_listener_and_active_transfer (test_m2_runtime.HTTPTests.test_revoke_closes_listener_and_active_transfer) ... ok
+test_two_download_limit (test_m2_runtime.HTTPTests.test_two_download_limit) ... ok
+test_untrusted_paths_tokens_host_and_origin (test_m2_runtime.HTTPTests.test_untrusted_paths_tokens_host_and_origin) ... ok
+test_bind_failure_cleans_private_inputs_and_copies (test_m2_runtime.LifecycleTests.test_bind_failure_cleans_private_inputs_and_copies) ... ok
+test_blocked_preflight_never_launches_service (test_m2_runtime.LifecycleTests.test_blocked_preflight_never_launches_service) ... ok
+test_expired_admission_never_binds (test_m2_runtime.LifecycleTests.test_expired_admission_never_binds) ... ok
+test_preparing_cancellation_has_no_listener_and_cleans (test_m2_runtime.LifecycleTests.test_preparing_cancellation_has_no_listener_and_cleans) ... ok
+test_qr_failure_after_bind_closes_owned_socket (test_m2_runtime.LifecycleTests.test_qr_failure_after_bind_closes_owned_socket) ... ok
+test_ambiguous_interface_and_disk_space_block (test_m2_runtime.PreflightTests.test_ambiguous_interface_and_disk_space_block) ... ok
+test_no_qr_dependency_blocks_start (test_m2_runtime.PreflightTests.test_no_qr_dependency_blocks_start) ... ok
+test_port_collision_does_not_close_foreign_listener (test_m2_runtime.PreflightTests.test_port_collision_does_not_close_foreign_listener) ... ok
+test_remote_unsupported_and_attestation_cannot_come_from_request (test_m2_runtime.PreflightTests.test_remote_unsupported_and_attestation_cannot_come_from_request) ... ok
+test_stale_status_cannot_publish_or_stop_by_pid (test_m2_runtime.PreflightTests.test_stale_status_cannot_publish_or_stop_by_pid) ... ok
+test_unknown_host_missing_probe_never_publish (test_m2_runtime.PreflightTests.test_unknown_host_missing_probe_never_publish) ... ok
+test_ambiguous_loopback_virtual_and_denied_bind (test_m3_validation.FailureRecovery.test_ambiguous_loopback_virtual_and_denied_bind) ... ok
+test_corrupt_state_is_unverifiable_and_never_published (test_m3_validation.FailureRecovery.test_corrupt_state_is_unverifiable_and_never_published) ... ok
+test_execution_denied_cleans_owned_preparation (test_m3_validation.FailureRecovery.test_execution_denied_cleans_owned_preparation) ... ok
+test_non_macos_explicitly_reports_unsupported_backend (test_m3_validation.FailureRecovery.test_non_macos_explicitly_reports_unsupported_backend) ... ok
+test_private_setup_failure_revokes_partial_secrets (test_m3_validation.FailureRecovery.test_private_setup_failure_revokes_partial_secrets) ... ok
+test_readonly_workspace_and_unreadable_source_block (test_m3_validation.FailureRecovery.test_readonly_workspace_and_unreadable_source_block) ... ok
+test_size_caps_without_reading_large_payload (test_m3_validation.FailureRecovery.test_size_caps_without_reading_large_payload) ... ok
+test_duplicate_host_and_upload_rejected_without_secret_echo (test_m3_validation.RequestBoundary.test_duplicate_host_and_upload_rejected_without_secret_echo) ... ok
+test_idle_connections_do_not_prevent_revocation (test_m3_validation.RequestBoundary.test_idle_connections_do_not_prevent_revocation) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 0.634s
+
+OK

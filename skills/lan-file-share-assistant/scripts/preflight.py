@@ -172,7 +172,7 @@ def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worke
         address = req['bind_address']
         if address is None and len(candidates) == 1:
             address = candidates[0]['address']
-        if address is None or address not in [r['address'] for r in candidates]:
+        if address is None or not rfc1918(address) or address not in [r['address'] for r in candidates]:
             raise ShareError('interface_ambiguous', '无法确定唯一活动物理局域网接口。', '运行interfaces查看候选，确认用途后通过--bind-address选择；不要修改VPN或绑定所有接口。')
         normalized['bind_address'] = address
         return '已选定本机活动物理接口上的RFC1918地址。'

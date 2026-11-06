@@ -43,18 +43,30 @@ def start(req, root_path, authorized_paths, host_attestation, probe_id):
                  request_digest=digest(normalized), state='preparing', created_at=utc(),
                  ready_at=None, expires_at=None, bind_address=normalized['bind_address'], port=None,
                  files=[], title=normalized['title'], last_error=None, heartbeat_at=time.time())
-    save(directory / 'state.json', state)
-    save(directory / 'secrets.json', {'access_token': secrets.token_hex(32), 'control_token': secrets.token_hex(32)})
-    save(directory / 'source-manifest.json', manifest)
-    save(directory / 'request.json', {'request': normalized, 'host_attestation': host_attestation,
-                                     'admitted_at': time.time(), 'probe_id': probe_id})
+    launching = False
     try:
-        launch('_worker', root, session_id)
-    except OSError:
-        clean(directory)
-        state.update(state='failed', last_error='execution_forbidden')
         save(directory / 'state.json', state)
-        return {'session_id': session_id, 'state': 'failed', 'can_publish': False, 'reason_code': 'execution_forbidden'}
+        save(directory / 'secrets.json', {'access_token': secrets.token_hex(32), 'control_token': secrets.token_hex(32)})
+        save(directory / 'source-manifest.json', manifest)
+        save(directory / 'request.json', {'request': normalized, 'host_attestation': host_attestation,
+                                         'admitted_at': time.time(), 'probe_id': probe_id})
+        launching = True
+        launch('_worker', root, session_id)
+    except OSError as error:
+        reason = 'execution_forbidden' if launching else 'insufficient_space' if error.errno == errno.ENOSPC else 'local_setup_failed'
+        try:
+            clean(directory)
+        except OSError:
+            reason = 'cleanup_incomplete'
+        state.update(state='failed', last_error=reason)
+        try:
+            save(directory / 'state.json', state)
+        except OSError:
+            pass  # A full/unwritable volume must not prevent credential revocation.
+        return {'session_id': session_id, 'state': 'failed', 'can_publish': False, 'reason_code': reason,
+                'summary': '本机准备或执行失败，未开放分享。',
+                'remediation': ['检查专用目录空间、权限和程序执行条件后重新预检。'],
+                'temporary_resources_removed': not any((directory / n).exists() for n in ('snapshots',) + SENSITIVE_FILES)}
     # Large copies stay preparing; no unverified URL is exposed.
     until = time.monotonic() + 2
     while time.monotonic() < until:
@@ -206,6 +218,10 @@ def status(root, session_id):
     directory = directory_for(root, session_id)
     try:
         state = load(directory / 'state.json')
+    except ValueError:
+        return {'session_id': session_id, 'state': 'unverified_stale', 'can_publish': False,
+                'reason_code': 'state_unreadable',
+                'remediation': '会话状态损坏，无法核验归属；保留私有目录，不恢复链接或按PID停止进程。'}
     except OSError:
         raise ShareError('session_missing', '找不到本项目会话。') from None
     result = {'session_id': session_id, 'state': state['state'], 'can_publish': False,
@@ -243,7 +259,10 @@ def status(root, session_id):
 
 def stop(root, session_id):
     directory = directory_for(root, session_id)
-    state = load(directory / 'state.json')
+    try:
+        state = load(directory / 'state.json')
+    except (ValueError, OSError):
+        return status(root, session_id)
     if state['state'] in TERMINAL:
         return status(root, session_id)
     if state['state'] not in ('ready', 'preparing') or not 0 <= time.time() - state['heartbeat_at'] <= 3:

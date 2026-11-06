@@ -1,0 +1,21 @@
+{
+  "client": "WorkBuddy",
+  "version": "5.9.3",
+  "platform": "macOS",
+  "development_skill_imported": true,
+  "tested_source_base": "7bb119e",
+  "tested_zip_sha256": "073a8a1361b91416dbf9033b5dd70962e67d910440871a85e6e9d374fbc185b0",
+  "first_attempt_download": "expired_before_download_due_to_inter_call_latency",
+  "first_attempt_expiry_verified": true,
+  "retry_ttl_seconds": 60,
+  "retry_status_and_download_in_one_independent_call": true,
+  "retry_page_http_status": 200,
+  "retry_file_http_status": 200,
+  "downloaded_bytes": 56,
+  "independent_downloaded_bytes_and_sha256_match": true,
+  "both_sessions_naturally_expired": true,
+  "both_listeners_closed_independently": true,
+  "both_sensitive_resources_removed": true,
+  "phone_proven_by_this_client_run": false,
+  "marketplace_submitted": false
+}
