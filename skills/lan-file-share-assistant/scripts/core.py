@@ -32,7 +32,7 @@ def save(path, value):
     """Atomic private writes; callers own the containing private directory."""
     path = Path(path)
     temp = path.with_name('.write-' + secrets.token_hex(16))
-    fd = os.open(str(temp), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    fd = create_private(temp)
     try:
         with os.fdopen(fd, 'w', encoding='utf-8') as stream:
             json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
@@ -43,11 +43,49 @@ def save(path, value):
 
 
 def load(path):
-    with open(path, encoding='utf-8') as stream:
+    with open_private_binary(path) as stream:
         return json.load(stream)
 
 
+def create_private(path):
+    if sys.platform == 'win32':
+        import windows_backend
+        return windows_backend.create_private(str(path))
+    return os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+
+
+def private_mkdir(path):
+    if sys.platform == 'win32':
+        import windows_backend
+        return windows_backend.make_private_dir(Path(path))
+    Path(path).mkdir(mode=0o700)
+    return Path(path)
+
+
+def open_private_binary(path):
+    if sys.platform == 'win32':
+        import windows_backend
+        return os.fdopen(windows_backend.open_private(str(path)), 'rb')
+    return open(path, 'rb')
+
+
+def runtime_available():
+    if sys.version_info < (3, 9):
+        raise ShareError('runtime_missing', '需要Python3.9或更新版本。')
+    if sys.platform == 'win32':
+        import windows_backend
+        windows_backend.runtime_available()
+    elif sys.platform == 'linux':
+        import linux_backend
+        linux_backend.runtime_available()
+    elif sys.platform != 'darwin' or os.name != 'posix' or not hasattr(os, 'O_NOFOLLOW'):
+        raise ShareError('platform_unverified', '当前平台缺少已实现的安全运行后端。')
+
+
 def physical(path):
+    if sys.platform == 'win32':
+        import windows_backend
+        return Path(windows_backend.validate_path(path))
     p = Path(path)
     if (not isinstance(path, str) or len(path) > 4096 or path.startswith('//') or not p.is_absolute() or '..' in p.parts or
             any(ord(c) < 32 or ord(c) == 127 for c in path) or any(c in path for c in '*?[')):
@@ -58,6 +96,9 @@ def physical(path):
 def safe_open(path):
     """Walk every POSIX component without following symlinks, including parents."""
     p = physical(str(path))
+    if sys.platform == 'win32':
+        import windows_backend
+        return windows_backend.safe_open(str(p))
     if os.name != 'posix' or not hasattr(os, 'O_NOFOLLOW'):
         raise ShareError('platform_unverified', '当前平台尚无已实现的安全文件打开后端。', '使用已验证的本机macOS环境；不要降级为跟随符号链接。')
     dfd = os.open('/', os.O_RDONLY | os.O_DIRECTORY)
@@ -105,6 +146,9 @@ def inspect_sources(paths):
 
 def workspace(path):
     """Do not chmod or adopt a general user directory."""
+    if sys.platform == 'win32':
+        import windows_backend
+        return windows_backend.workspace(Path(path))
     if os.name != 'posix':
         raise ShareError('platform_unverified', '当前平台未实现私有目录与安全文件后端。', '请使用已验证的macOS环境；Windows/Linux支持仍待完成。')
     p = physical(str(path))
@@ -139,7 +183,13 @@ def rfc1918(address):
 
 
 def interfaces():
-    """Only macOS physical adapters are admitted in the first verified backend."""
+    """Read native physical-adapter metadata, never infer file-host ownership."""
+    if sys.platform == 'linux':
+        import linux_backend
+        return linux_backend.interfaces()
+    if sys.platform == 'win32':
+        import windows_backend
+        return windows_backend.interfaces()
     if sys.platform != 'darwin':
         raise ShareError('platform_unverified', 'M2仅实现并验证macOS网卡与安全文件后端。', '此平台暂不能启动；后续需验证平台适配，不能以私有IP推断支持。')
     try:
@@ -161,8 +211,21 @@ def interfaces():
 
 
 class ContinuousClock:
-    """macOS native suspend-inclusive clock. No monotonic fallback."""
+    """Native suspend-inclusive clock on each backend; no monotonic fallback."""
     def __init__(self):
+        self.getter = None
+        if sys.platform in ('linux', 'win32'):
+            try:
+                if sys.platform == 'linux':
+                    import linux_backend
+                    self.getter = linux_backend.continuous_seconds
+                else:
+                    import windows_backend
+                    self.getter = windows_backend.continuous_seconds
+                self.getter()
+                return
+            except (ShareError, AttributeError, OSError, ValueError):
+                raise ShareError('clock_backend_unverified', '无法核对当前平台含休眠连续时钟。') from None
         if sys.platform != 'darwin':
             raise ShareError('clock_backend_unverified', '当前平台连续计时后端尚未验证。', '切换到已验证平台，不以普通monotonic替代休眠计时。')
         try:
@@ -183,6 +246,8 @@ class ContinuousClock:
             raise ShareError('clock_backend_unverified', '无法核对包含休眠的原生连续计时能力。') from None
 
     def now(self):
+        if self.getter is not None:
+            return self.getter()
         return self.tick() * self.scale
 
 
@@ -198,7 +263,7 @@ class Deadline:
 
 def snapshot(manifest, directory, progress=None):
     """Create read-only session copies; neither serve nor later reopen sources."""
-    directory.mkdir(mode=0o700)
+    private_mkdir(directory)
     result = []
     for source in manifest:
         try:
@@ -211,7 +276,7 @@ def snapshot(manifest, directory, progress=None):
         try:
             if identity(os.fstat(fd)) != source['identity']:
                 raise ShareError('source_changed', '文件在预检后改变，已阻止分享。')
-            outfd = os.open(str(destination), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            outfd = create_private(destination)
             with os.fdopen(outfd, 'wb') as target:
                 while True:
                     data = os.read(fd, 1024 * 1024)

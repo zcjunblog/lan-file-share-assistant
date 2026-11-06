@@ -11,7 +11,7 @@ import sys
 import time
 
 from core import (ContinuousClock, ShareError, digest, identifier, inspect_sources,
-                  interfaces, load, physical, rfc1918, save, utc, workspace)
+                  interfaces, load, physical, private_mkdir, rfc1918, runtime_available, save, utc, workspace)
 
 LIMITATIONS = ['HTTP未加密，仅用于可信局域网。', '接收端连通性、路由隔离及防火墙尚未验证。',
                '已下载副本无法撤回；到期会中断未完成传输。', '本次只核对当前宿主；不保证宿主结束任务后仍保留进程。']
@@ -49,7 +49,7 @@ def start_probe(root):
     root = workspace(root)
     probe_id = secrets.token_hex(16)
     directory = root / ('probe-' + probe_id)
-    directory.mkdir(mode=0o700)
+    private_mkdir(directory)
     save(directory / 'owner.json', {'nonce': secrets.token_hex(32), 'started_at': time.time()})
     launch('_probe', root, probe_id)
     return {'probe_id': probe_id, 'expires_in_seconds': 60, 'file_service_started': False,
@@ -57,10 +57,14 @@ def start_probe(root):
 
 
 def launch(command, root, item_id):
+    options = {'start_new_session': True}
+    if sys.platform == 'win32':
+        import windows_backend
+        options = windows_backend.detached_options()
     return subprocess.Popen([sys.executable, str(Path(__file__).with_name('lan_share.py')), command,
                              '--work-dir', str(root), '--id', item_id], stdin=subprocess.DEVNULL,
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True,
-                            close_fds=True)
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                            close_fds=True, **options)
 
 
 def probe_worker(root, probe_id):
@@ -132,8 +136,7 @@ def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worke
         return '调用方已依据%s确认本机执行位置。' % context['evidence']
 
     def runtime():
-        if sys.version_info < (3, 9) or sys.platform != 'darwin' or not hasattr(os, 'O_NOFOLLOW'):
-            raise ShareError('platform_unverified', '当前M2仅放行已实现的macOS/Python3.9+后端。', '使用已验证平台；Windows/Linux适配尚未完成。')
+        runtime_available()
         return 'Python版本与本机安全文件原语可用。'
 
     def sources():

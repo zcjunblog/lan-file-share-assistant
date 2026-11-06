@@ -1,0 +1,55 @@
+name: Native synthetic platform acceptance
+
+on:
+  push:
+    branches: [feat/cross-platform, main]
+    paths:
+      - '.github/workflows/native-platforms.yml'
+      - 'skills/**'
+      - 'tests/**'
+      - 'tools/native_platform_acceptance.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    if: github.event.repository.private == true
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+        python: ['3.9', '3.12']
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      # Official v6 refs resolved through the GitHub REST API on 2026-11-06.
+      - name: Check out private source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - name: Install Skill runtime requirements only
+        run: python -m pip install --disable-pip-version-check -r skills/lan-file-share-assistant/requirements.txt
+      - name: Native backend unit tests (scrubbed unittest result)
+        run: python tools/native_platform_acceptance.py tests
+      - name: Prepare private synthetic workspace and bounded no-network probe
+        run: python tools/native_platform_acceptance.py prepare
+      - name: Verify fresh cross-invocation heartbeat and native components
+        run: python tools/native_platform_acceptance.py exercise
+      - name: Remove only owned synthetic resources
+        if: always()
+        run: python tools/native_platform_acceptance.py cleanup
+      # Deliberately no artifact upload: raw state/QR/credentials remain private.
+      # NATIVE_SUMMARY_JSON is the only acceptance report; its scope explicitly
+      # excludes production LAN, real Agent clients, and real system sleep.

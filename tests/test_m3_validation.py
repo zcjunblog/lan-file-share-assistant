@@ -106,8 +106,8 @@ class FailureRecovery(m2.Fixture):
         self.assertIn('bind_denied',[c['reason_code'] for c in report['checks']])
         self.assertFalse(report['can_start'])
 
-    def test_non_macos_explicitly_reports_unsupported_backend(self):
-        for platform in ('linux','win32'):
+    def test_unknown_platform_explicitly_reports_unsupported_backend(self):
+        for platform in ('freebsd13','aix'):
             with patch('sys.platform',platform):
                 _, report, _=preflight.run(self.req,self.root,self.req['file_paths'],self.req['host_context'])
             self.assertFalse(report['can_start'])

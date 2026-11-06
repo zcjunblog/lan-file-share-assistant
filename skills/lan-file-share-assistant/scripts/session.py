@@ -10,7 +10,7 @@ import threading
 import time
 import json
 
-from core import Deadline, ShareError, digest, identifier, load, save, snapshot, utc, workspace
+from core import Deadline, ShareError, create_private, digest, identifier, load, private_mkdir, save, snapshot, utc, workspace
 from http_service import ShareServer
 from preflight import LIMITATIONS, launch, run
 
@@ -38,7 +38,7 @@ def start(req, root_path, authorized_paths, host_attestation, probe_id):
     root = workspace(root_path)
     session_id, owner = secrets.token_hex(16), secrets.token_hex(32)
     directory = directory_for(root, session_id)
-    directory.mkdir(mode=0o700)
+    private_mkdir(directory)
     state = dict(schema_version='1.0', session_id=session_id, owner_instance=owner,
                  request_digest=digest(normalized), state='preparing', created_at=utc(),
                  ready_at=None, expires_at=None, bind_address=normalized['bind_address'], port=None,
@@ -131,6 +131,8 @@ def worker(root, session_id):
         qr = segno.make_qr(url, error='m')
         for kind in ('png', 'svg'):
             target = directory / ('qr.' + kind)
+            descriptor = create_private(target)
+            os.close(descriptor)
             qr.save(str(target), scale=8, border=4)
             os.chmod(str(target), 0o600)
         if deadline.due():
