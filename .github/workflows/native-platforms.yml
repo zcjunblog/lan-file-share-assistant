@@ -2,12 +2,17 @@ name: Native synthetic platform acceptance
 
 on:
   push:
-    branches: [feat/cross-platform, main]
+    branches: [feat/cross-platform, feat/m4-release, main]
     paths:
       - '.github/workflows/native-platforms.yml'
       - 'skills/**'
       - 'tests/**'
       - 'tools/native_platform_acceptance.py'
+      - 'tools/distribution.py'
+      - 'tools/build_release.py'
+      - 'tools/smoke_archive.py'
+      - 'distribution/**'
+      - 'releases/**'
   workflow_dispatch:
 
 permissions:
@@ -43,6 +48,8 @@ jobs:
         run: python -m pip install --disable-pip-version-check -r skills/lan-file-share-assistant/requirements.txt
       - name: Native backend unit tests (scrubbed unittest result)
         run: python tools/native_platform_acceptance.py tests
+      - name: Release integrity safeguards (scrubbed unittest result)
+        run: python tools/native_platform_acceptance.py release-tests
       - name: Prepare private synthetic workspace and bounded no-network probe
         run: python tools/native_platform_acceptance.py prepare
       - name: Verify fresh cross-invocation heartbeat and native components

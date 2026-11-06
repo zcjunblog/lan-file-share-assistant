@@ -1,0 +1,31 @@
+{
+  "cover": {
+    "imagesLoaded": true,
+    "width": 1600,
+    "height": 720,
+    "horizontalOverflow": false,
+    "textOverflow": [],
+    "localChineseFont": true,
+    "renderedFonts": [
+      {
+        "family": "PingFang SC",
+        "glyphCount": 9,
+        "custom": false
+      }
+    ]
+  },
+  "icon": {
+    "width": 512,
+    "height": 512
+  },
+  "workflow": {
+    "width": 1600,
+    "height": 440,
+    "steps": 7,
+    "textOverflow": []
+  },
+  "javascriptErrors": 0,
+  "manually_reviewed": true,
+  "system_fonts_redistributed": false,
+  "valid_qr_in_promotional_assets": false
+}

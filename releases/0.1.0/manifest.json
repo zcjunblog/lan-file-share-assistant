@@ -1,0 +1,143 @@
+{
+  "name": "lan-file-share-assistant",
+  "version": "0.1.0",
+  "stage": "release_candidate_not_submitted",
+  "packages": [
+    {
+      "profile": "standard",
+      "archive": "lan-file-share-assistant-0.1.0.zip",
+      "bytes": 49737,
+      "sha256": "1f4af9d1c8e5a1473c8d0863fe3ca846e9b2cd1970940fac69b90df20e94e78d",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "48be7186700f152b5b8273dcea78f9f22138cb02297a039ee3d2e428f31ac15f"
+        },
+        {
+          "path": "VERSION",
+          "sha256": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "f4e92eb5f8a71bfaeef7998fdea75e921b83473eeb34223e322a4cbc59171460"
+        },
+        {
+          "path": "assets/download.html",
+          "sha256": "4542a024b6bbd8b981ccdfb37e16b7e5ec974f841c098f74b431a9a871106844"
+        },
+        {
+          "path": "assets/icon-512.png",
+          "sha256": "f4699dce43a11873f5fe55609fd7351627e4fdd58760fc0edffbc7a7e1a5935f"
+        },
+        {
+          "path": "assets/icon.svg",
+          "sha256": "98280e7094a176ee839ab28441ec6ec0d38ceccbf1969e83ce52575eec83bc86"
+        },
+        {
+          "path": "references/runtime.md",
+          "sha256": "ed4c8139c1bd0dde33d46cb3c592f5898d90a27fbdbce3162e08f9800b2fcccf"
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "a5a79998744ea333eb770d89cadff14ba563f9c7f75875783e951eb1cb606276"
+        },
+        {
+          "path": "scripts/core.py",
+          "sha256": "8fcc2051f0c8921f84025624648971f503240c8d7523bfede23d3b4fa40562e8"
+        },
+        {
+          "path": "scripts/http_service.py",
+          "sha256": "eb4382599325930bfe831ca6e4ba9657f49cfacfd1f81efb7990b68e4fef6c0f"
+        },
+        {
+          "path": "scripts/lan_share.py",
+          "sha256": "713598f45145a8520750d5be9647cbcf7643f0a52a4bfa17c59db6eb3fdb073f"
+        },
+        {
+          "path": "scripts/linux_backend.py",
+          "sha256": "d802df3fdcfda4bff25f387b65c7280de6b9e38c6c62d5ab1e6c6394b1741bb5"
+        },
+        {
+          "path": "scripts/preflight.py",
+          "sha256": "c69c9dc3282f9557670d9862b378f6e8998b5d89191ed5b8983b7ccad2e60d12"
+        },
+        {
+          "path": "scripts/session.py",
+          "sha256": "07226a97f1d7ccdf5f2d1c17e75b8a3bd3334229dd6ac59045ed18e05ddcf116"
+        },
+        {
+          "path": "scripts/windows_backend.py",
+          "sha256": "0e519d1ab04e3592242a3ce47700ba245db1452352b3e68b7b25f8709d809523"
+        }
+      ]
+    },
+    {
+      "profile": "workbuddy",
+      "archive": "lan-file-share-assistant-workbuddy-0.1.0.zip",
+      "bytes": 50437,
+      "sha256": "eed06065fdc6f421eeb191159b2155ca8a654cc6fbf6c278dbbcfd6fddf67c2b",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "5f9e174706be77f1d4bad149f63ff7091fc9ed95c78a3132d658701622947ccf"
+        },
+        {
+          "path": "VERSION",
+          "sha256": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "f4e92eb5f8a71bfaeef7998fdea75e921b83473eeb34223e322a4cbc59171460"
+        },
+        {
+          "path": "assets/download.html",
+          "sha256": "4542a024b6bbd8b981ccdfb37e16b7e5ec974f841c098f74b431a9a871106844"
+        },
+        {
+          "path": "assets/icon-512.png",
+          "sha256": "f4699dce43a11873f5fe55609fd7351627e4fdd58760fc0edffbc7a7e1a5935f"
+        },
+        {
+          "path": "assets/icon.svg",
+          "sha256": "98280e7094a176ee839ab28441ec6ec0d38ceccbf1969e83ce52575eec83bc86"
+        },
+        {
+          "path": "references/runtime.md",
+          "sha256": "ed4c8139c1bd0dde33d46cb3c592f5898d90a27fbdbce3162e08f9800b2fcccf"
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "a5a79998744ea333eb770d89cadff14ba563f9c7f75875783e951eb1cb606276"
+        },
+        {
+          "path": "scripts/core.py",
+          "sha256": "8fcc2051f0c8921f84025624648971f503240c8d7523bfede23d3b4fa40562e8"
+        },
+        {
+          "path": "scripts/http_service.py",
+          "sha256": "eb4382599325930bfe831ca6e4ba9657f49cfacfd1f81efb7990b68e4fef6c0f"
+        },
+        {
+          "path": "scripts/lan_share.py",
+          "sha256": "713598f45145a8520750d5be9647cbcf7643f0a52a4bfa17c59db6eb3fdb073f"
+        },
+        {
+          "path": "scripts/linux_backend.py",
+          "sha256": "d802df3fdcfda4bff25f387b65c7280de6b9e38c6c62d5ab1e6c6394b1741bb5"
+        },
+        {
+          "path": "scripts/preflight.py",
+          "sha256": "c69c9dc3282f9557670d9862b378f6e8998b5d89191ed5b8983b7ccad2e60d12"
+        },
+        {
+          "path": "scripts/session.py",
+          "sha256": "07226a97f1d7ccdf5f2d1c17e75b8a3bd3334229dd6ac59045ed18e05ddcf116"
+        },
+        {
+          "path": "scripts/windows_backend.py",
+          "sha256": "0e519d1ab04e3592242a3ce47700ba245db1452352b3e68b7b25f8709d809523"
+        }
+      ]
+    }
+  ]
+}

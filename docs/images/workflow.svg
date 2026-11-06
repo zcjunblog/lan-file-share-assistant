@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="440" viewBox="0 0 1600 440" role="img" aria-labelledby="title desc">
+<title id="title">局域网文件分享助手七步流程</title>
+<desc id="desc">依次选择文件、环境预检、固定快照、启动自检、展示二维码、扫码下载、到期或手动停止。预检或自检失败时不开放下载；同网设备是否可达需独立确认。</desc>
+<rect width="1600" height="440" rx="24" fill="#f6f9fe"/>
+<g font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,sans-serif">
+<text x="76" y="67" fill="#173b60" font-size="30" font-weight="600">从选定文件，到结束分享</text>
+<text x="76" y="104" fill="#59738f" font-size="18">每次分享都先检测，访问入口在启动自检通过后提供。</text>
+<rect x="76" y="143" width="188" height="180" rx="16" fill="#fff" stroke="#dce7f5"/>
+<text x="94" y="174" fill="#59738f" font-size="13" font-weight="600" font-family="Arial,sans-serif">01</text>
+<g transform="translate(210 160) scale(.85)" fill="none" stroke="#2866b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l7 7v21H4zM15 4v8h7M9 18h8M9 24h6"/></g>
+<text x="94" y="240" fill="#193e65" font-size="23" font-weight="550">选择文件</text>
+<text x="94" y="281" fill="#59738f" font-size="15">明确范围与有效期</text>
+<path d="M270 234h7m-4-4 4 4-4 4" fill="none" stroke="#87a9d1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="283" y="143" width="188" height="180" rx="16" fill="#fff" stroke="#dce7f5"/>
+<text x="301" y="174" fill="#59738f" font-size="13" font-weight="600" font-family="Arial,sans-serif">02</text>
+<g transform="translate(417 160) scale(.85)" fill="none" stroke="#2866b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="15" r="11"/><path d="m10 15 4 4 7-8m2 12 9 9"/></g>
+<text x="301" y="240" fill="#193e65" font-size="23" font-weight="550">环境预检</text>
+<text x="301" y="281" fill="#59738f" font-size="15">不支持时说明原因</text>
+<path d="M477 234h7m-4-4 4 4-4 4" fill="none" stroke="#87a9d1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="490" y="143" width="188" height="180" rx="16" fill="#fff" stroke="#dce7f5"/>
+<text x="508" y="174" fill="#59738f" font-size="13" font-weight="600" font-family="Arial,sans-serif">03</text>
+<g transform="translate(624 160) scale(.85)" fill="none" stroke="#2866b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="22" height="26" rx="4"/><path d="M11 12h10M11 18h10M11 24h6M1 11v22a3 3 0 0 0 3 3h18"/></g>
+<text x="508" y="240" fill="#193e65" font-size="23" font-weight="550">固定快照</text>
+<text x="508" y="281" fill="#59738f" font-size="15">仅限本次选定文件</text>
+<path d="M684 234h7m-4-4 4 4-4 4" fill="none" stroke="#87a9d1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="697" y="143" width="188" height="180" rx="16" fill="#fff" stroke="#dce7f5"/>
+<text x="715" y="174" fill="#59738f" font-size="13" font-weight="600" font-family="Arial,sans-serif">04</text>
+<g transform="translate(831 160) scale(.85)" fill="none" stroke="#2866b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="32" height="25" rx="5"/><path d="m10 17 5 5 11-12M11 35h14"/></g>
+<text x="715" y="240" fill="#193e65" font-size="23" font-weight="550">启动自检</text>
+<text x="715" y="281" fill="#59738f" font-size="15">核验服务与文件访问</text>
+<path d="M891 234h7m-4-4 4 4-4 4" fill="none" stroke="#87a9d1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="904" y="143" width="188" height="180" rx="16" fill="#fff" stroke="#dce7f5"/>
+<text x="922" y="174" fill="#59738f" font-size="13" font-weight="600" font-family="Arial,sans-serif">05</text>
+<g transform="translate(1038 160) scale(.85)" fill="none" stroke="#2866b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V3h9M24 3h9v9M33 24v9h-9M12 33H3v-9"/><rect x="11" y="11" width="14" height="14" rx="3"/></g>
+<text x="922" y="240" fill="#193e65" font-size="23" font-weight="550">展示二维码</text>
+<text x="922" y="281" fill="#59738f" font-size="15">自检通过后再展示</text>
+<path d="M1098 234h7m-4-4 4 4-4 4" fill="none" stroke="#87a9d1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1111" y="143" width="188" height="180" rx="16" fill="#fff" stroke="#dce7f5"/>
+<text x="1129" y="174" fill="#59738f" font-size="13" font-weight="600" font-family="Arial,sans-serif">06</text>
+<g transform="translate(1245 160) scale(.85)" fill="none" stroke="#2866b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="1" width="22" height="34" rx="5"/><path d="M15 7h8M19 13v12m-5-5 5 5 5-5M16 30h6"/></g>
+<text x="1129" y="240" fill="#193e65" font-size="23" font-weight="550">扫码下载</text>
+<text x="1129" y="281" fill="#59738f" font-size="15">同网可互通设备接收</text>
+<path d="M1305 234h7m-4-4 4 4-4 4" fill="none" stroke="#87a9d1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1318" y="143" width="188" height="180" rx="16" fill="#fff" stroke="#dce7f5"/>
+<text x="1336" y="174" fill="#59738f" font-size="13" font-weight="600" font-family="Arial,sans-serif">07</text>
+<g transform="translate(1452 160) scale(.85)" fill="none" stroke="#2866b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="15"/><path d="M18 8v11l7 4"/></g>
+<text x="1336" y="240" fill="#193e65" font-size="23" font-weight="550">到期／停止</text>
+<text x="1336" y="281" fill="#59738f" font-size="15">关闭分享并清理会话</text>
+<path d="M76 370h34" stroke="#2866b8" stroke-width="3" stroke-linecap="round"/>
+<text x="125" y="376" fill="#59738f" font-size="17">预检或自检失败时停止创建；设备连通性单独确认。已下载的副本不会因分享结束而撤回。</text>
+</g></svg>

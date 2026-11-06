@@ -330,22 +330,24 @@ def error_codes(error):
     return rows
 
 
-def backend_tests():
-    suite = unittest.defaultTestLoader.discover(str(REPO / 'tests'), pattern='test_*backend*.py')
+def backend_tests(release=False):
+    pattern = 'test_distribution.py' if release else 'test_*backend*.py'
+    suite = unittest.defaultTestLoader.discover(str(REPO / 'tests'), pattern=pattern)
     result = ScrubbedTestResult()
     # Capture incidental output; only the whitelist below reaches hosted logs.
     from contextlib import redirect_stdout, redirect_stderr
     with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
         suite.run(result)
     require(result.testsRun > 0, 'backend_tests_discovered')
-    print('NATIVE_BACKEND_TESTS_JSON=' + json.dumps({'run': result.testsRun, 'skipped': len(result.skipped),
+    label = 'NATIVE_RELEASE_TESTS_JSON=' if release else 'NATIVE_BACKEND_TESTS_JSON='
+    print(label + json.dumps({'run': result.testsRun, 'skipped': len(result.skipped),
           'passed': result.wasSuccessful(), 'failures': result.scrubbed}, sort_keys=True), flush=True)
     return result.wasSuccessful()
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('phase', choices=('prepare', 'exercise', 'cleanup', 'tests'))
+    parser.add_argument('phase', choices=('prepare', 'exercise', 'cleanup', 'tests', 'release-tests'))
     parser.add_argument('--directory', default='outputs/native-platform')
     args = parser.parse_args()
     summary = dict(schema_version=1, platform=sys.platform, python='.'.join(map(str, sys.version_info[:3])),
@@ -353,8 +355,8 @@ def main():
                    real_agent_client='not_tested', real_system_sleep='not_tested', passed=False)
     try:
         out = output_directory(args.directory)
-        if args.phase == 'tests':
-            return 0 if backend_tests() else 1
+        if args.phase in ('tests', 'release-tests'):
+            return 0 if backend_tests(release=args.phase == 'release-tests') else 1
         if args.phase == 'prepare':
             prepare(out)
         elif args.phase == 'exercise':

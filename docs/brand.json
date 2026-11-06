@@ -1,0 +1,41 @@
+{
+  "name": "局域网文件分享助手",
+  "identifier": "lan-file-share-assistant",
+  "eyebrow": "LAN FILE SHARE ASSISTANT",
+  "tagline": "指定文件 · 扫码下载 · 自动过期",
+  "direction": "沿用白蓝办公家族；留白、柔和蓝底、清楚的文档层级与克制的线性图形",
+  "concept": "选定的一份文件，经检测后交给另一台设备，结束后收回分享入口。",
+  "palette": {
+    "primary": "#2866b8",
+    "navy": "#183450",
+    "surface": "#ffffff",
+    "canvas": "#edf4ff",
+    "border": "#bdd3ef",
+    "secondaryText": "#63778b"
+  },
+  "typography": {
+    "chinese": "PingFang SC",
+    "fallbacks": ["Microsoft YaHei", "Noto Sans CJK SC", "sans-serif"],
+    "latin": "Arial",
+    "fontDistribution": "Uses locally installed fonts; no system font files redistributed."
+  },
+  "assets": {
+    "iconVector": "../skills/lan-file-share-assistant/assets/icon.svg",
+    "iconPng": "../skills/lan-file-share-assistant/assets/icon-512.png",
+    "coverSource": "images/cover.html",
+    "coverPng": "images/cover.png",
+    "workflowVector": "images/workflow.svg"
+  },
+  "dimensions": {
+    "icon": [512, 512],
+    "cover": [1600, 720],
+    "workflow": [1600, 440]
+  },
+  "illustrationBoundary": "封面为明确标注的界面示意图，不是运行截图。图标扫描四角仅为品牌图形，不是二维码。所有物料不包含可扫描二维码、分享链接、本机地址或用户文件。",
+  "claimBoundary": "不暗示传输加密、所有系统或客户端已验收、公开发布、开源许可证或平台审核状态。",
+  "render": {
+    "tool": "tools/render_brand.cjs",
+    "engine": "Playwright with locally installed Chrome",
+    "network": "Local file rendering only; external requests rejected."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "version": "0.1.0",
+  "platform": "darwin",
+  "passed": true,
+  "runtime_python": "Python 3.9.6",
+  "decoder_in_runtime_environment": false,
+  "profiles": [
+    {
+      "profile": "standard",
+      "archive_sha256": "1f4af9d1c8e5a1473c8d0863fe3ca846e9b2cd1970940fac69b90df20e94e78d",
+      "source_files_verified": 15,
+      "eight_checks_passed": true,
+      "cross_invocation_probe_and_health": true,
+      "independent_qr_decode": true,
+      "download_bytes": 8400,
+      "http_source_snapshot_sha256_match": true,
+      "terminal_state": "stopped",
+      "listener_closed": true,
+      "private_resources_removed": true
+    },
+    {
+      "profile": "workbuddy",
+      "archive_sha256": "eed06065fdc6f421eeb191159b2155ca8a654cc6fbf6c278dbbcfd6fddf67c2b",
+      "source_files_verified": 15,
+      "eight_checks_passed": true,
+      "cross_invocation_probe_and_health": true,
+      "independent_qr_decode": true,
+      "download_bytes": 8400,
+      "http_source_snapshot_sha256_match": true,
+      "terminal_state": "expired",
+      "ttl_seconds": 60,
+      "listener_closed": true,
+      "private_resources_removed": true
+    }
+  ],
+  "physical_receiver_tested": false,
+  "marketplace_parse_tested": false,
+  "installed_agent_tested": false,
+  "real_system_sleep_tested": false
+}

@@ -1,0 +1,17 @@
+{
+  "display_name": "局域网文件分享助手",
+  "display_name_en": "LAN File Share Assistant",
+  "description_zh": "将明确指定的本机文件临时分享给同一局域网的手机或电脑。先检测本地配置，再生成本地二维码与下载页面，支持自动过期、提前停止和临时副本清理。适合交付需求文档、操作手册、图片与资料包。macOS已有客户端实测；Windows/Linux为实验性支持，原生CI已通过，实际网络与客户端仍需验收。HTTP未加密。",
+  "description_en": "Share explicitly selected local files with devices on the same LAN. Check local capabilities first, then create an offline QR code and a temporary download page with automatic expiry and early stop. macOS has client-level testing; Windows/Linux support is experimental with native CI coverage. Real LAN and client acceptance remain pending. HTTP is unencrypted.",
+  "author": "zcjunblog",
+  "examples_zh": [
+    "把刚生成的需求确认书分享给我的手机，先检测本地配置，十分钟后关闭。",
+    "将我指定的这三份操作手册生成局域网扫码下载页，五分钟后自动过期。",
+    "停止刚才的文件分享，确认下载入口已关闭、临时副本已清理。"
+  ],
+  "examples_en": [
+    "Share the requirements document just generated with my phone. Check local capabilities first and close the share after ten minutes.",
+    "Create a LAN QR download page for these three selected manuals and expire it after five minutes.",
+    "Stop the previous share and verify that the listener is closed and temporary copies are removed."
+  ]
+}
