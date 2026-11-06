@@ -1,0 +1,13 @@
+{
+  "test_sessions_checked": 8,
+  "all_test_sessions_terminal": true,
+  "all_test_listeners_closed": true,
+  "all_session_sensitive_resources_removed": true,
+  "synthetic_capacity_sources_removed": true,
+  "installed_skill_matches_repository": true,
+  "source_files_checked": 10,
+  "no_production_code_changed_in_continuation": true,
+  "real_sleep_still_deferred": true,
+  "cross_platform_backends_or_native_tests_added": false,
+  "marketplace_submitted": false
+}

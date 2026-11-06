@@ -9,7 +9,9 @@
   "updated_cli_preflight_checked": true,
   "missing_lifecycle_probe_correctly_blocks": true,
   "updated_cli_check_host": "Codex execution tool on same Mac",
-  "updated_full_workbuddy_agent_run": false,
+  "updated_full_workbuddy_agent_run": true,
   "formal_release_install_smoke_pending": true,
-  "development_archive_sha256": "9a8b42711102ef37caf5b3977831aebe61618da5b11b5a5bfd45d55e1ba0ab2d"
+  "development_archive_sha256": "9a8b42711102ef37caf5b3977831aebe61618da5b11b5a5bfd45d55e1ba0ab2d",
+  "verification_at_initial_update": "CLI preflight only; full client flow was pending at that point",
+  "followup_evidence": "workbuddy-current.json"
 }

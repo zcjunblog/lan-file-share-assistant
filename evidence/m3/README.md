@@ -29,7 +29,7 @@
 
 WorkBuddy原始smoke-evidence.json、各调用JSON、已失效二维码副本及下载样本只在outputs/m3/workbuddy-smoke；本仓库使用白名单摘要。主Agent另行读取下载副本逐字节比较、计算SHA-256、核对实际终态、资源删除和端口关闭，不仅采用客户端文字结论。
 
-实际运行的初始开发包基于M2提交7bb119e；M3故障修订另经48项回归验证。[更新记录](installed-update.json)核对：UI拒绝同名重复导入后，保留原包并原子同步这个唯一自有Skill，10份源码与仓库一致，更新后CLI预检通过；没有重新跑完整更新后WorkBuddy Agent流程，正式发布包仍需M4构建和安装烟测。
+实际运行的初始开发包基于M2提交7bb119e；M3故障修订另经48项回归验证。[更新记录](installed-update.json)核对：UI拒绝同名重复导入后，保留原包并原子同步这个唯一自有Skill，10份源码与仓库一致。更新后的完整WorkBuddy流程已在[补充验收](continuation.md)通过；正式发布包仍需M4构建和安装烟测。
 
 ## 客户端与平台矩阵
 
@@ -68,7 +68,8 @@ WorkBuddy由真实本机客户端交互验收，开发ZIP不含运行状态/凭�
 - 用户已明确选择本轮暂不进行整机睡眠，保留待验收。
 - 系统时钟回拨/前跳仅做注入时钟测试，未改动真实系统时间。
 - 未退出整个WorkBuddy/Codex应用；只验证有限后台存活和所属子进程异常终止。
-- Windows/Linux真机、其他Agent、60分钟长运行与2GiB/5GiB容量吞吐仍未完成。
+- Windows/Linux真机、其他Agent及60分钟长运行仍未完成。
+- 后续已完成[Python3.9、2GiB/5GiB本机合成容量及修订版WorkBuddy补验](continuation.md)，跨设备大文件吞吐仍未验证。
 - 手机系统/浏览器及手机保存副本SHA-256未补齐。
 
 下一步按[设备验收清单](../../docs/m3-device-checklist.md)收尾可获得的外部证据，再进入M4正式发布包和品牌素材准备。当前仓库继续私有，未提交市场。

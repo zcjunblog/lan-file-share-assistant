@@ -1,0 +1,47 @@
+{
+  "python": "3.9.6",
+  "platform": "macOS",
+  "source_revision": "e618681",
+  "direct_runtime_requirement": "segno==1.6.6",
+  "installed_distributions": {
+    "segno": "1.6.6",
+    "importlib_metadata": "8.7.1",
+    "pip": "21.2.4",
+    "zipp": "3.23.1",
+    "setuptools": "58.0.4"
+  },
+  "development_dependencies_absent": true,
+  "extracted_skill_matches_source": true,
+  "production_preflight_passed": true,
+  "independent_status_health_passed": true,
+  "source_count": 3,
+  "single_file_max_bytes": 2147483648,
+  "aggregate_bytes": 5368709120,
+  "files": [
+    {
+      "size_bytes": 2147483648,
+      "sha256_matches_independent_zero_fixture": true
+    },
+    {
+      "size_bytes": 2147483648,
+      "sha256_matches_independent_zero_fixture": true
+    },
+    {
+      "size_bytes": 1073741824,
+      "sha256_matches_independent_zero_fixture": true
+    }
+  ],
+  "preparation_seconds": 6.366,
+  "self_http_stream_seconds": 2.166,
+  "observed_server_rss_peak_mib": 21.0,
+  "rss_samples": 45,
+  "source_identity_unchanged_before_test_cleanup": true,
+  "synthetic_sources_cleaned_after_check": true,
+  "manual_stop_verified": true,
+  "listener_closed": true,
+  "private_snapshots_and_credentials_removed": true,
+  "receiver": "same_machine_http_client",
+  "cross_device_large_file_tested": false,
+  "realistic_throughput_benchmark": false,
+  "real_system_sleep_tested": false
+}
