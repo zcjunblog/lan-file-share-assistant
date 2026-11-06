@@ -1,7 +1,7 @@
 # 局域网文件分享助手 产品设计
 
 更新日期：2026-11-06（Asia/Shanghai）。
-当前阶段：按用户要求执行GitHub开源，改进正式README并采用MIT；WorkBuddy0.1.0已提交审核，审核通过与上线尚未确认。Windows/Linux实验性、整机睡眠暂缓及未验收边界保持。
+当前阶段：GitHub已公开并采用MIT，正式README与贡献指南已同步，匿名访问和四组原生CI通过；WorkBuddy0.1.0已提交审核，审核通过与上线尚未确认。Windows/Linux实验性、整机睡眠暂缓及未验收边界保持。
 
 ## 1. 已确认需求与本轮范围
 
@@ -238,3 +238,5 @@ Windows仅限本机固定卷且须支持持久ACL/扩展原子替换，拒绝UNC
 用户明确要求同步GitHub、写好README并直接开源，覆盖此前私有默认。采用MIT许可证，添加贡献指南，主页改为产品介绍、快速开始、完整流程、实际页面、验证矩阵和开源入口。原生CI移除仅私有仓库运行条件，保留只读权限、合成数据、脱敏输出和所属资源清理。
 
 公开前检查当前文件、Git各分支可见历史与历史ZIP，未发现已知本机私有运行值或凭据特征。正式已提审的Skill包保持原内容与SHA-256，不因仓库说明调整而改变平台候选。GitHub公开、WorkBuddy提审和平台上线分别记录。
+
+2026-11-06 GitHub开源完成：用户授权后将zcjunblog/lan-file-share-assistant改为公开，GitHub识别MIT，正式README、贡献指南及公开CI已推送。未登录读取README、LICENSE和两个0.1.0 ZIP均为HTTP200，下载摘要与本地一致；已提审归档保持不变。源码a60d639的CI运行42213479558四组Windows/Ubuntu、Python3.9/3.12全部通过；本地87项中73通过、14按环境跳过。开源证据见evidence/open-source。下一步等待WorkBuddy审核结果；Windows/Linux真实局域网与Agent、整机睡眠等待验收项保持，不宣称已上线。

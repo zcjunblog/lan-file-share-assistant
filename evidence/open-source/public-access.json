@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-06",
+  "repository": "https://github.com/zcjunblog/lan-file-share-assistant",
+  "visibility": "public",
+  "license": "MIT",
+  "source_commit": "a60d639d61a8b23391c9ad9f275c48f4d614b26f",
+  "anonymous_repository_api_access": true,
+  "anonymous_files": [
+    {
+      "path": "README.md",
+      "anonymous_http_status": 200,
+      "sha256_matches_local": true,
+      "bytes": 11239
+    },
+    {
+      "path": "LICENSE",
+      "anonymous_http_status": 200,
+      "sha256_matches_local": true,
+      "bytes": 1066
+    },
+    {
+      "path": "releases/0.1.0/lan-file-share-assistant-0.1.0.zip",
+      "anonymous_http_status": 200,
+      "sha256_matches_local": true,
+      "bytes": 298235
+    },
+    {
+      "path": "releases/0.1.0/lan-file-share-assistant-workbuddy-0.1.0.zip",
+      "anonymous_http_status": 200,
+      "sha256_matches_local": true,
+      "bytes": 298935
+    }
+  ],
+  "workbuddy_status": "submitted_for_review_not_confirmed_live"
+}

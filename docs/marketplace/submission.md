@@ -33,6 +33,6 @@
 
 ## 保持的边界
 
-GitHub仓库继续私有，源码公开与许可证未决定；本次平台页面显示免费，后续定价另行决定。Windows/Linux真机、手机副本摘要和真实整机睡眠仍保留待验收状态。提交、审核结果和上线分别记录；本轮不把提交回执写成上线。
+提交时GitHub仓库为私有；随后用户授权直接开源，现已公开并采用MIT许可证，匿名下载与四组原生CI通过。本次平台页面显示免费，后续定价另行决定。Windows/Linux真机、手机副本摘要和真实整机睡眠仍保留待验收状态。提交、审核结果和上线分别记录；本轮不把提交回执写成上线。
 
 [WorkBuddy发布后台](https://open.workbuddy.cn/skill/all) · [官方Skill文档](https://open.workbuddy.cn/docs/skill) · [图标来源与配套资源](icon-generation.md)

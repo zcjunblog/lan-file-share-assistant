@@ -24,12 +24,13 @@
   "avatar_circle_crop_visually_checked": true,
   "final_installed_agent_smoke": "passed",
   "windows_linux_support": "experimental_native_ci_passed_real_lan_agent_pending",
-  "github_visibility": "private",
+  "github_visibility": "public",
   "old_draft": {
     "skill_id": "os_7c3bc8f2252d778f",
     "never_submitted": true,
     "permanent_deletion_confirmed_by_user": true,
     "deleted": true
   },
-  "source_code_public_license": "undecided"
+  "source_code_public_license": "MIT",
+  "github_visibility_at_submission": "private"
 }
