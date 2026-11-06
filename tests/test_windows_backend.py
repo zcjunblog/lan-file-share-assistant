@@ -1,5 +1,6 @@
 """Windows path policy plus native synthetic-file/ACL tests (no real shares)."""
 import importlib.util
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path
@@ -17,6 +18,16 @@ import core
 backend = None
 if importlib.util.find_spec('windows_backend'):
     import windows_backend as backend
+
+
+@contextmanager
+def native_stage(name):
+    """Expose only fixed stage labels to the scrubbed native CI reporter."""
+    try:
+        yield
+    except Exception as error:
+        error.native_stage = name
+        raise
 
 
 class WindowsPathPolicyTests(unittest.TestCase):
@@ -62,6 +73,17 @@ class WindowsNativeTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
+    def test_optional_private_control_absence_is_missing_but_missing_source_is_invalid(self):
+        import session
+        root = backend.workspace(self.base / 'private')
+        missing = root / 'control.json'
+        with self.assertRaises(FileNotFoundError):
+            backend.open_private(str(missing))
+        self.assertFalse(session.control_valid(root, {'owner_instance': 'synthetic-owner'}, 'synthetic-token'))
+        with self.assertRaises(core.ShareError) as caught:
+            backend.safe_open(str(missing))
+        self.assertEqual(caught.exception.code, 'source_invalid')
+
     def test_regular_source_descriptor_has_stable_identity_and_readonly_sharing(self):
         fd = backend.safe_open(str(self.source))
         try:
@@ -90,10 +112,14 @@ class WindowsNativeTests(unittest.TestCase):
             stream.write(b'new')
         fd = backend.open_private(str(target))
         try:
-            os.replace(str(replacement), str(target))
-            self.assertEqual(target.read_bytes(), b'new')
-            target.unlink()
-            self.assertEqual(os.read(fd, 100), b'old')
+            with native_stage('private_replace_open_target'):
+                os.replace(str(replacement), str(target))
+            with native_stage('private_read_new_target'):
+                self.assertEqual(target.read_bytes(), b'new')
+            with native_stage('private_unlink_new_target'):
+                target.unlink()
+            with native_stage('private_read_old_handle'):
+                self.assertEqual(os.read(fd, 100), b'old')
         finally:
             os.close(fd)
 
@@ -118,7 +144,12 @@ class WindowsNativeTests(unittest.TestCase):
         result = subprocess.run(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command',
                                  script], capture_output=True, text=True,
                                 env=dict(os.environ, LAN_SHARE_TEST_PATHS=json.dumps([str(root), str(child)])),
-                                timeout=15, check=True)
+                                timeout=15, check=False)
+        if result.returncode:
+            error = subprocess.CalledProcessError(result.returncode, result.args)
+            error.native_stage = 'independent_acl_powershell'
+            error.powershell_error_id = backend._powershell_error_id(result.stderr)
+            raise error
         acl = json.loads(result.stdout)
         for item in acl['items']:
             self.assertEqual(item['owner'], acl['sid'])

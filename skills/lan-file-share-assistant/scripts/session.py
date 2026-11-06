@@ -9,6 +9,7 @@ import shutil
 import threading
 import time
 import json
+import re
 
 from core import Deadline, ShareError, create_private, digest, identifier, load, private_mkdir, save, snapshot, utc, workspace
 from http_service import ShareServer
@@ -16,6 +17,18 @@ from preflight import LIMITATIONS, launch, run
 
 TERMINAL = ('expired', 'stopped', 'failed')
 SENSITIVE_FILES = ('secrets.json', 'request.json', 'source-manifest.json', 'control.json', 'qr.png', 'qr.svg')
+
+
+def atomic_residue(name):
+    return re.fullmatch(r'\.write-[a-f0-9]{32}', name) is not None
+
+
+def resources_removed(directory):
+    try:
+        names = [path.name for path in directory.iterdir()]
+    except OSError:
+        return False
+    return not any(name == 'snapshots' or name in SENSITIVE_FILES or atomic_residue(name) for name in names)
 
 
 def directory_for(root, session_id):
@@ -29,6 +42,9 @@ def clean(directory):
             shutil.rmtree(target)
     for name in SENSITIVE_FILES:
         (directory / name).unlink(missing_ok=True)
+    for path in directory.iterdir():
+        if atomic_residue(path.name):
+            path.unlink(missing_ok=True)
 
 
 def start(req, root_path, authorized_paths, host_attestation, probe_id):
@@ -52,8 +68,8 @@ def start(req, root_path, authorized_paths, host_attestation, probe_id):
                                          'admitted_at': time.time(), 'probe_id': probe_id})
         launching = True
         launch('_worker', root, session_id)
-    except OSError as error:
-        reason = 'execution_forbidden' if launching else 'insufficient_space' if error.errno == errno.ENOSPC else 'local_setup_failed'
+    except (OSError, ShareError) as error:
+        reason = error.code if isinstance(error, ShareError) else 'execution_forbidden' if launching else 'insufficient_space' if error.errno == errno.ENOSPC else 'local_setup_failed'
         try:
             clean(directory)
         except OSError:
@@ -61,12 +77,12 @@ def start(req, root_path, authorized_paths, host_attestation, probe_id):
         state.update(state='failed', last_error=reason)
         try:
             save(directory / 'state.json', state)
-        except OSError:
+        except (OSError, ShareError):
             pass  # A full/unwritable volume must not prevent credential revocation.
         return {'session_id': session_id, 'state': 'failed', 'can_publish': False, 'reason_code': reason,
                 'summary': '本机准备或执行失败，未开放分享。',
                 'remediation': ['检查专用目录空间、权限和程序执行条件后重新预检。'],
-                'temporary_resources_removed': not any((directory / n).exists() for n in ('snapshots',) + SENSITIVE_FILES)}
+                'temporary_resources_removed': resources_removed(directory)}
     # Large copies stay preparing; no unverified URL is exposed.
     until = time.monotonic() + 2
     while time.monotonic() < until:
@@ -174,7 +190,7 @@ def worker(root, session_id):
         state['state'] = 'stopping'
         try:
             save(directory / 'state.json', state)
-        except OSError:
+        except (OSError, ShareError):
             state['last_error'] = 'state_write_failed'
         if server:
             if thread and thread.is_alive():
@@ -229,7 +245,7 @@ def status(root, session_id):
     result = {'session_id': session_id, 'state': state['state'], 'can_publish': False,
               'receiver_status': 'not_tested'}
     if state['state'] in TERMINAL:
-        result.update(reason_code=state['last_error'], temporary_resources_removed=not any((directory / n).exists() for n in ('snapshots',) + SENSITIVE_FILES))
+        result.update(reason_code=state['last_error'], temporary_resources_removed=resources_removed(directory))
         if state.get('error_summary'):
             result.update(summary=state['error_summary'], remediation=state['remediation'])
         if state['state'] == 'failed' and (directory / 'preflight.json').exists():

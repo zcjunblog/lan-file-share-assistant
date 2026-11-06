@@ -39,6 +39,66 @@ class FailureRecovery(m2.Fixture):
         self.assertEqual(result['state'], 'failed')
         self.assertFalse(result['can_publish'])
 
+    def test_native_security_error_during_setup_revokes_partial_inputs(self):
+        manifest = core.inspect_sources(self.req['file_paths'])
+        real_save = core.save
+        def failed_write(path, value):
+            if Path(path).name == 'request.json':
+                raise core.ShareError('workspace_unwritable', 'Synthetic native creation error')
+            real_save(path, value)
+        with patch('session.run', return_value=(self.req, {'can_start': True}, manifest)), patch('session.save', side_effect=failed_write):
+            try:
+                result = session.start(self.req, self.root, self.req['file_paths'], self.req['host_context'], None)
+            except core.ShareError:
+                result = {'state': 'uncaught_native_error'}
+        self.assertFalse(any(p.name in session.SENSITIVE_FILES for p in self.root.rglob('*')))
+        self.assertEqual(result['state'], 'failed')
+        self.assertFalse(result['can_publish'])
+
+    def test_native_stopping_write_failure_still_revokes_real_listener(self):
+        root, sid, directory, manifest = m2.LifecycleTests.make_preparing(self)
+        req = dict(self.req, bind_address='127.0.0.1')
+        admission = core.load(directory / 'request.json');admission['request'] = req
+        core.save(directory / 'request.json', admission)
+        state = core.load(directory / 'state.json')
+        state.update(title='Synthetic stop persistence fault', request_digest=core.digest(req),
+                     bind_address='127.0.0.1', port=None)
+        core.save(directory / 'state.json', state)
+        real_save, factory = core.save, session.ShareServer
+        servers = []
+        def capture(*args, **kwargs):
+            server = factory(*args, **kwargs);servers.append(server);return server
+        def failed_write(path, value):
+            if Path(path).name == 'state.json' and value.get('state') in ('ready', 'stopping'):
+                raise core.ShareError('workspace_unwritable', 'Synthetic native persistence error')
+            real_save(path, value)
+        try:
+            with patch('session.run', return_value=(req, {'can_start': True}, manifest)), patch('session.ShareServer', side_effect=capture), patch('session.save', side_effect=failed_write):
+                try:session.worker(root, sid)
+                except core.ShareError:pass
+            self.assertEqual(len(servers), 1)
+            with self.assertRaises(OSError):
+                with socket.create_connection(servers[0].server_address, timeout=.2):pass
+            self.assertFalse(any((directory / n).exists() for n in ('snapshots',) + session.SENSITIVE_FILES))
+            self.assertEqual(core.load(directory / 'state.json')['state'], 'failed')
+        finally:
+            for server in servers:server.revoke()
+
+    def test_atomic_write_residue_is_counted_and_cleaned(self):
+        root = core.workspace(self.root)
+        sid = secrets.token_hex(16)
+        directory = session.directory_for(root, sid);directory.mkdir(mode=0o700)
+        core.save(directory / 'state.json', {'state':'failed','last_error':None})
+        residue = directory / ('.write-' + 'a' * 32)
+        residue.write_bytes(b'synthetic partial credential write')
+        unrelated = directory / '.write-retained-note'
+        unrelated.write_text('do not treat as a generated transaction file')
+        self.assertFalse(session.status(root, sid)['temporary_resources_removed'])
+        session.clean(directory)
+        self.assertFalse(residue.exists())
+        self.assertTrue(unrelated.exists())
+        self.assertTrue(session.status(root, sid)['temporary_resources_removed'])
+
     def test_corrupt_state_is_unverifiable_and_never_published(self):
         # Catches traceback/ambiguous state when host interruption truncates metadata.
         root = core.workspace(self.root)

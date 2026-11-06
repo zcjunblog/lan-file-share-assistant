@@ -271,6 +271,10 @@ def _read_fd(path, private):
         handle = None  # descriptor now owns it, including close-on-error
         return fd
     except (OSError, ValueError) as exc:
+        if private and isinstance(exc, FileNotFoundError):
+            # Optional control/probe records use ordinary absence as False.
+            # ACL, reparse, sharing and missing-source failures stay fail-closed.
+            raise
         raise ShareError('workspace_unwritable' if private else 'source_invalid',
                          '文件不存在、权限不符、被写入占用或路径含重解析点。') from exc
     finally:
@@ -458,14 +462,26 @@ ConvertTo-Json -InputObject @($result) -Compress
 """
 
 
+def _powershell_error_id(stderr):
+    """Extract an identifier only, never paths, addresses or error messages."""
+    value = stderr.decode('utf-8', 'replace') if isinstance(stderr, bytes) else stderr or ''
+    match = re.search(r'FullyQualifiedErrorId\s*:\s*([A-Za-z][A-Za-z0-9_.,-]{0,160})', value)
+    return match.group(1) if match else 'unavailable'
+
+
 def interfaces():
     _api()
     try:
         system_root = os.environ.get('SystemRoot', r'C:\Windows')
         executable = ntpath.join(system_root, r'System32\WindowsPowerShell\v1.0\powershell.exe')
         process = subprocess.run([executable, '-NoProfile', '-NonInteractive', '-Command',
-                                  _INTERFACES_SCRIPT], capture_output=True, timeout=10, check=True,
+                                  _INTERFACES_SCRIPT], capture_output=True, timeout=10, check=False,
                                  creationflags=0x08000000)
+        if process.returncode:
+            error = subprocess.CalledProcessError(process.returncode, process.args)
+            error.native_stage = 'interfaces_powershell'
+            error.powershell_error_id = _powershell_error_id(process.stderr)
+            raise error
         if len(process.stdout) > 1024 * 1024:
             raise ValueError('Unexpected interface output size')
         rows = json.loads(process.stdout.decode('utf-8-sig'))

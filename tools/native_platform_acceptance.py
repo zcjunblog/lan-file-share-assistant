@@ -10,6 +10,7 @@ import hashlib
 import http.client
 import io
 import json
+import re
 import os
 from pathlib import Path
 import secrets
@@ -321,6 +322,9 @@ def error_codes(error):
         for key in ('winerror','errno'):
             value=getattr(error,key,None)
             if type(value) is int:item[key]=value
+        for key in ('native_stage','powershell_error_id'):
+            value=getattr(error,key,None)
+            if isinstance(value,str) and re.fullmatch(r'[A-Za-z0-9_.-]{1,120}',value):item[key]=value
         rows.append(item)
         error=error.__cause__
     return rows
