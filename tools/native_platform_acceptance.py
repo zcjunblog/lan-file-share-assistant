@@ -324,7 +324,7 @@ def error_codes(error):
             if type(value) is int:item[key]=value
         for key in ('native_stage','powershell_error_id'):
             value=getattr(error,key,None)
-            if isinstance(value,str) and re.fullmatch(r'[A-Za-z0-9_.-]{1,120}',value):item[key]=value
+            if isinstance(value,str) and re.fullmatch(r'[A-Za-z0-9_.,-]{1,160}',value):item[key]=value
         rows.append(item)
         error=error.__cause__
     return rows

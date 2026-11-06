@@ -502,23 +502,41 @@ def runtime_available():
 # Constant script, no file names, addresses or user-supplied shell fragments.
 _INTERFACES_SCRIPT = r"""
 $ErrorActionPreference = 'Stop'
-[Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false)
-$result = @()
-foreach ($adapter in @(Get-NetAdapter -Physical | Where-Object {$_.Status -eq 'Up'})) {
-    foreach ($ip in @(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4)) {
-        if ($ip.AddressState -eq 'Preferred') {
-            $result += @{interface=[string]$adapter.Name;address=[string]$ip.IPAddress}
+$stage = 'encoding'
+try {
+    [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false)
+    $result = @()
+    $stage = 'physical_adapters'
+    $adapters = @(Get-NetAdapter -Physical | Where-Object {$_.Status -eq 'Up'})
+    foreach ($adapter in $adapters) {
+        $stage = 'ipv4_addresses'
+        foreach ($ip in @(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4)) {
+            if ($ip.AddressState -eq 'Preferred') {
+                $result += @{interface=[string]$adapter.Name;address=[string]$ip.IPAddress}
+            }
         }
     }
+    $stage = 'serialization'
+    ConvertTo-Json -InputObject @($result) -Compress
+} catch {
+    $safe = ([string]$_.FullyQualifiedErrorId) -replace '[^A-Za-z0-9_.,-]', '_'
+    if ($safe.Length -gt 160) {$safe = $safe.Substring(0, 160)}
+    [Console]::Error.WriteLine('LAN_SHARE_PS_ERROR_ID=' + $safe)
+    [Console]::Error.WriteLine('LAN_SHARE_PS_STAGE=' + $stage)
+    exit 1
 }
-ConvertTo-Json -InputObject @($result) -Compress
 """
 
 
 def _powershell_error_id(stderr):
     """Extract an identifier only, never paths, addresses or error messages."""
     value = stderr.decode('utf-8', 'replace') if isinstance(stderr, bytes) else stderr or ''
-    match = re.search(r'FullyQualifiedErrorId\s*:\s*([A-Za-z][A-Za-z0-9_.,-]{0,160})', value)
+    # Redirected Windows PowerShell errors can be CLIXML with escaped line
+    # breaks/spaces. Decode only those standard scalar escapes, retaining no
+    # stderr text in the raised exception or native CI summary.
+    value = re.sub(r'_x([0-9a-fA-F]{4})_', lambda match: chr(int(match.group(1), 16)), value)
+    match = re.search(r'(?:LAN_SHARE_PS_ERROR_ID=|FullyQualifiedErrorId\s*:\s*)'
+                      r'([A-Za-z][A-Za-z0-9_.,-]{0,160})', value)
     return match.group(1) if match else 'unavailable'
 
 
@@ -536,7 +554,9 @@ def interfaces():
                                  creationflags=0x08000000, env=environment)
         if process.returncode:
             error = subprocess.CalledProcessError(process.returncode, process.args)
-            error.native_stage = 'interfaces_powershell'
+            stage = re.search(rb'LAN_SHARE_PS_STAGE=(encoding|physical_adapters|ipv4_addresses|serialization)',
+                              process.stderr)
+            error.native_stage = 'interfaces_' + stage.group(1).decode('ascii') if stage else 'interfaces_powershell'
             error.powershell_error_id = _powershell_error_id(process.stderr)
             raise error
         if len(process.stdout) > 1024 * 1024:

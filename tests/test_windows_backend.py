@@ -60,6 +60,18 @@ class WindowsPathPolicyTests(unittest.TestCase):
         with self.assertRaises(core.ShareError):
             backend.runtime_available()
 
+    def test_powershell_diagnostics_extract_only_ids_from_text_clixml_and_safe_markers(self):
+        for stderr, expected in [
+                ('FullyQualifiedErrorId : CouldNotAutoloadMatchingModule\n', 'CouldNotAutoloadMatchingModule'),
+                ('LAN_SHARE_PS_ERROR_ID=CmdletizationQuery_NotFound,Get-NetIPAddress\n',
+                 'CmdletizationQuery_NotFound,Get-NetIPAddress'),
+                ('#< CLIXML\n<Objs><S S="Error">FullyQualifiedErrorId_x0020_:_x0020_'
+                 'NoMatchingMSFTNetAdapterObjectsFound,Get-NetAdapter_x000D__x000A_</S></Objs>',
+                 'NoMatchingMSFTNetAdapterObjectsFound,Get-NetAdapter'),
+                ('private C:\\somewhere\\data.txt 192.168.1.1', 'unavailable')]:
+            with self.subTest(expected=expected):
+                self.assertEqual(backend._powershell_error_id(stderr), expected)
+
 
 @unittest.skipUnless(os.name == 'nt', 'Requires real Windows native APIs')
 class WindowsNativeTests(unittest.TestCase):
