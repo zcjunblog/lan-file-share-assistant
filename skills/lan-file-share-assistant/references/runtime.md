@@ -2,7 +2,17 @@
 
 ## 当前适用范围
 
-M3验收中的开发版，Python3.9+、Segno1.6.6。已实现的操作系统后端为macOS：networksetup/ifconfig读取活动物理网卡，POSIX逐层O_NOFOLLOW打开文件，mach_continuous_time含休眠连续计时。Windows/Linux当前返回platform_unverified，不能凭通用Skill目录结构宣称已经兼容所有环境。
+M3跨平台验收中的开发版，Python3.9+、Segno1.6.6。已实现三个原生后端：
+
+| 系统 | 文件与私有目录 | 网卡与连续计时 |
+| --- | --- | --- |
+| macOS | POSIX逐层O_NOFOLLOW、目录0700/文件0600 | networksetup/ifconfig物理网卡、mach_continuous_time |
+| Linux | POSIX逐层O_NOFOLLOW、目录0700/文件0600 | sysfs物理设备元数据与IPv4 ioctl、CLOCK_BOOTTIME |
+| Windows | CreateFileW拒绝重解析点、仅当前用户SID的受保护DACL、原生原子替换 | PowerShell NetAdapter/NetTCPIP物理网卡、GetTickCount64 |
+
+Windows要求支持持久ACL和FileRenameInfoEx POSIX替换语义的本机固定卷；拒绝UNC、网络卷、设备路径、备用数据流与重解析点。Linux缺少可信sysfs元数据或CLOCK_BOOTTIME时阻止启动。未实现的平台仍返回platform_unverified；不得用权限或计时降级绕过。
+
+Windows 2022与Ubuntu 24.04各Python3.9/3.12四组原生CI通过。它只证明合成文件原语、跨调用后台探针与环回服务组件；云端runner仍被生产预检按远端或未知宿主拒绝。实际Windows/Linux生产worker、传输中截止、同网扫码、具体Agent和整机睡眠尚待设备验收，不能由CI替代。macOS的Codex与WorkBuddy开发版已完成本机链路，用户手机内容回读和停止后失效已有反馈。
 
 无需模型API、互联网、外部二维码服务或管理员权限。仅准备依赖时可能联网，文件下载页面不引用外部资源。HTTP不加密；只在可信、可互通的局域网分享。
 
@@ -16,9 +26,11 @@ python3 -m venv <venv>
 <venv>/bin/python <skill>/scripts/lan_share.py interfaces
 ```
 
+Windows命令使用`<venv>\Scripts\python.exe`，创建虚拟环境可用`py -3 -m venv <venv>`；在PowerShell调用带空格的解释器路径时使用`& "<解释器路径>"`。后续CLI参数在各系统一致，解释器与文件路径应分别正确引用。
+
 不要复用此项目开发环境的绝对路径，不自动安装全局依赖。解释器缺失时说明需要本地Python3.9+；Segno缺失时报告dependency_missing，使用同一解释器安装并重新预检。
 
-工作目录必须新的、专用的、父目录已存在的物理绝对路径。运行程序会建立0700目录及标记文件；拒绝接管未标记已有目录。源文件必须显式授权且使用物理路径，不能放在运行状态目录内。输入含符号链接时不要自行解析并扩大授权；请明确实际文件范围后再执行。
+工作目录必须新的、专用的、父目录已存在的物理绝对路径。运行程序会建立POSIX 0700或Windows仅当前用户ACL目录及标记文件；拒绝接管未标记已有目录。源文件必须显式授权且使用物理路径，不能放在运行状态目录内。输入含符号链接时不要自行解析并扩大授权；请明确实际文件范围后再执行。
 
 ## 检查及状态
 
@@ -67,4 +79,4 @@ stop通过私有本地控制凭据请求所属服务关闭，控制凭据不会�
 
 WorkBuddy首轮60秒测试中，工具调用延迟使下载落在截止之后，服务按期关闭且资源清理。有效期包含Agent在ready之后的工具调用/思考/交付时间，默认10分钟通常比极短有效期留有更多交互时间。测试或交付超时不能假装成功，也不能替用户静默延长。
 
-正常停止会清理快照和凭据；SIGKILL这类强制终止会让操作系统关闭监听，但可能保留0700/0600私有资源。M3实测这种状态不再展示链接。只有已独立确认该会话进程结束后才能清理其专用目录；绝不根据旧PID或端口猜测并杀进程。
+正常停止会清理快照和凭据；SIGKILL这类强制终止会让操作系统关闭监听，但可能保留POSIX 0700/0600或Windows用户专属ACL私有资源。M3实测这种状态不再展示链接。只有已独立确认该会话进程结束后才能清理其专用目录；绝不根据旧PID或端口猜测并杀进程。

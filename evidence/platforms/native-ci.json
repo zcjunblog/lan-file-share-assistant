@@ -1,0 +1,150 @@
+{
+  "date": "2026-11-06",
+  "source_commit": "e41754bed16dd5d6e2ad86c5348ffeb676655f71",
+  "run_url": "https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42192469347",
+  "conclusion": "success",
+  "repository_visibility": "private",
+  "jobs": [
+    {
+      "job": "windows-2022 / Python 3.12",
+      "conclusion": "success",
+      "backend_tests": {
+        "run": 24,
+        "passed": 22,
+        "skipped": 2,
+        "failures": 0
+      },
+      "components": {
+        "actual_component_expiry_cleanup": true,
+        "authenticated_stop_cleanup": true,
+        "cross_invocation_probe": true,
+        "interface_enumeration": "observed",
+        "loopback_http_512kib_sha256": true,
+        "native_continuous_clock_progress": true,
+        "owned_listeners_and_threads_closed": true,
+        "passed": true,
+        "physical_interface_candidates": 1,
+        "platform": "win32",
+        "private_workspace_and_files": true,
+        "production_lan": "not_tested",
+        "python": "3.12.10",
+        "real_agent_client": "not_tested",
+        "real_system_sleep": "not_tested",
+        "safe_source_and_snapshot": true,
+        "schema_version": 1,
+        "scope": "native_synthetic_components_only",
+        "status_health": true,
+        "unknown_and_remote_admission_blocked": true,
+        "wrong_control_rejected": true
+      }
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.12",
+      "conclusion": "success",
+      "backend_tests": {
+        "run": 24,
+        "passed": 10,
+        "skipped": 14,
+        "failures": 0
+      },
+      "components": {
+        "actual_component_expiry_cleanup": true,
+        "authenticated_stop_cleanup": true,
+        "cross_invocation_probe": true,
+        "interface_enumeration": "observed",
+        "loopback_http_512kib_sha256": true,
+        "native_continuous_clock_progress": true,
+        "owned_listeners_and_threads_closed": true,
+        "passed": true,
+        "physical_interface_candidates": 1,
+        "platform": "linux",
+        "private_workspace_and_files": true,
+        "production_lan": "not_tested",
+        "python": "3.12.16",
+        "real_agent_client": "not_tested",
+        "real_system_sleep": "not_tested",
+        "safe_source_and_snapshot": true,
+        "schema_version": 1,
+        "scope": "native_synthetic_components_only",
+        "status_health": true,
+        "unknown_and_remote_admission_blocked": true,
+        "wrong_control_rejected": true
+      }
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.9",
+      "conclusion": "success",
+      "backend_tests": {
+        "run": 24,
+        "passed": 10,
+        "skipped": 14,
+        "failures": 0
+      },
+      "components": {
+        "actual_component_expiry_cleanup": true,
+        "authenticated_stop_cleanup": true,
+        "cross_invocation_probe": true,
+        "interface_enumeration": "observed",
+        "loopback_http_512kib_sha256": true,
+        "native_continuous_clock_progress": true,
+        "owned_listeners_and_threads_closed": true,
+        "passed": true,
+        "physical_interface_candidates": 1,
+        "platform": "linux",
+        "private_workspace_and_files": true,
+        "production_lan": "not_tested",
+        "python": "3.9.25",
+        "real_agent_client": "not_tested",
+        "real_system_sleep": "not_tested",
+        "safe_source_and_snapshot": true,
+        "schema_version": 1,
+        "scope": "native_synthetic_components_only",
+        "status_health": true,
+        "unknown_and_remote_admission_blocked": true,
+        "wrong_control_rejected": true
+      }
+    },
+    {
+      "job": "windows-2022 / Python 3.9",
+      "conclusion": "success",
+      "backend_tests": {
+        "run": 24,
+        "passed": 22,
+        "skipped": 2,
+        "failures": 0
+      },
+      "components": {
+        "actual_component_expiry_cleanup": true,
+        "authenticated_stop_cleanup": true,
+        "cross_invocation_probe": true,
+        "interface_enumeration": "observed",
+        "loopback_http_512kib_sha256": true,
+        "native_continuous_clock_progress": true,
+        "owned_listeners_and_threads_closed": true,
+        "passed": true,
+        "physical_interface_candidates": 1,
+        "platform": "win32",
+        "private_workspace_and_files": true,
+        "production_lan": "not_tested",
+        "python": "3.9.13",
+        "real_agent_client": "not_tested",
+        "real_system_sleep": "not_tested",
+        "safe_source_and_snapshot": true,
+        "schema_version": 1,
+        "scope": "native_synthetic_components_only",
+        "status_health": true,
+        "unknown_and_remote_admission_blocked": true,
+        "wrong_control_rejected": true
+      }
+    }
+  ],
+  "macos_full_suite": {
+    "run": 75,
+    "passed": 61,
+    "windows_native_skipped": 14,
+    "failures": 0
+  },
+  "independent_review": "no_confirmed_findings",
+  "real_windows_linux_lan_and_agent": "not_tested",
+  "physical_system_sleep": "deferred_by_user"
+}

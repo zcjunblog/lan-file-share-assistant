@@ -6,7 +6,9 @@ LAN File Share Assistant · 面向本地 Agent 的临时文件交付 Skill
 
 从需求确认书、操作手册到图片与资料包，将明确选定的本机文件交付给同一局域网内的手机或电脑。助手先检测本地配置，再创建限时下载页与二维码；分享结束后，由本地程序关闭连接并清理临时副本。
 
-当前处于 **M3 验收与修订**：生产功能已实现，48项自动化测试通过；已完成用户手机内容回读/停止后失效确认，以及WorkBuddy V5.9.3开发包本机下载与自然到期验证。整机睡眠和跨系统等项目仍待验收，尚未提供正式发布包或提交市场。
+当前处于 **M3 跨平台验收与修订**：生产功能与三个系统后端已实现；已完成macOS本机链路、用户手机内容回读与停止后失效确认，以及WorkBuddy V5.9.3开发包验收。Windows/Linux的原生系统CI与真实设备验收分别记录，尚未提供正式发布包或提交市场。
+
+**跨平台进展**：Windows 2022、Ubuntu 24.04各Python3.9/3.12，四组原生CI全部通过。macOS完整回归61通过、14项Windows原生测试跳过。查看[兼容性与验证范围](evidence/platforms/README.md)；Windows/Linux真实局域网和Agent仍待设备验收。
 
 ## 核心能力
 
@@ -38,11 +40,11 @@ LAN File Share Assistant · 面向本地 Agent 的临时文件交付 Skill
 
 标准 Skill 源码位于 [skills/lan-file-share-assistant](skills/lan-file-share-assistant/SKILL.md)。需要能在文件所在电脑运行 Python3.9+ 的本地 Agent；二维码仅依赖 Segno1.6.6，不需要模型 API 或云端二维码服务。
 
-根据客户端的自定义 Skill 规则接入该目录，并参阅[运行与故障处理](skills/lan-file-share-assistant/references/runtime.md)。当前已验证标准入口、macOS后端与WorkBuddy开发包；其他Agent的后台服务能力仍需逐一验收，详见M3矩阵。
+根据客户端的自定义 Skill 规则接入该目录，并参阅[运行与故障处理](skills/lan-file-share-assistant/references/runtime.md)。已提供macOS、Windows与Linux原生后端；实际可用性取决于文件所在电脑的八项预检。macOS的Codex与WorkBuddy开发包已完成本机链路，其他系统的局域网和Agent运行仍需逐一验收。见[系统兼容与证据](evidence/platforms/README.md)。
 
 ## 验证与当前边界
 
-- **48项自动化测试通过**：包含原M1协议案例，以及文件范围、符号链接、来源变化、路径限制、错误凭据、到期、准备取消、部分写入失败清理及损坏状态处理。
+- **自动化回归覆盖**：原M1协议案例、文件范围、来源变化、路径限制、凭据、到期、部分写入失败清理、损坏状态，以及Windows ACL/重解析与Linux物理网卡策略；结果按实际系统分别记录。
 - **本机真实链路通过**：生产八项预检、跨工具调用进程存活、自检、实际二维码独立解码、5个合成文件下载摘要与源文件一致。
 - **真实60秒到期通过**：下载中断、监听关闭、凭据与快照清理；截止后约0.68秒完成核验。
 - **提前停止通过**：错误控制凭据被拒绝；正确请求中断两条进行中的下载并清理会话。
@@ -50,7 +52,7 @@ LAN File Share Assistant · 面向本地 Agent 的临时文件交付 Skill
 
 **M3新增实测**：用户手机返回测试文件验收码，停止后确认旧链接失效；WorkBuddy V5.9.3开发包成功下载56字节合成文件并核对SHA-256，真实60秒到期后关闭并清理。首轮因调用间隔超过60秒未完成下载，失败记录保留；第二轮合并独立状态与下载核验后通过。
 
-手机系统/浏览器未提供，手机副本字节摘要未独立核验。当前仅放行macOS后端；Windows/Linux明确提示尚未适配。用户本轮暂不做整机睡眠，真实系统时间变更和整个宿主应用退出也未验证。详见[M3验收记录](evidence/m3/README.md)。
+手机系统/浏览器未提供，手机副本字节摘要未独立核验。Windows/Linux后端现已实现；原生系统CI、真实局域网和具体Agent验收分别记录，不能互相替代。用户本轮暂不做整机睡眠，真实系统时间变更和整个宿主应用退出也未验证。详见[M3验收记录](evidence/m3/README.md)。
 
 **M3补验**：Python3.9.6独立虚拟环境、独立解压Skill和5GiB本机合成传输通过，服务峰值RSS采样约21MiB；更新后的WorkBuddy安装源码也已完整重跑，7,300字节文件摘要一致并提前停止清理。见[补充验收](evidence/m3/continuation.md)。
 
@@ -70,6 +72,6 @@ python3.12 -m venv .venv
 
 [产品设计](memory-bank/design.md) · [开发待办](memory-bank/todo.md) · [预检与会话协议](docs/preflight-and-session-protocol.md) · [项目协作约定](Agent.md)
 
-下一步为 **M3收尾：整机睡眠、目标系统与外部设备证据**，随后进行M4正式发布准备。仓库保持私有，公开、许可证、收费与市场提交另行决定。
+下一步为 **M3设备验收：Windows/Linux真实局域网与客户端、手机副本摘要**，随后进行M4正式发布准备；整机睡眠继续暂缓。仓库保持私有，公开、许可证、收费与市场提交另行决定。
 
 Created by [zcjunblog](https://github.com/zcjunblog)

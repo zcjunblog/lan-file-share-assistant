@@ -1,0 +1,11 @@
+{
+  "platform": "macOS",
+  "production_dispatch_worker": true,
+  "cross_invocation_health": true,
+  "independent_qr_decode": true,
+  "http_file_sha256_match": true,
+  "ttl_seconds": 60,
+  "real_expiry_closed_listener": true,
+  "private_resources_removed": true,
+  "physical_sleep_tested": false
+}

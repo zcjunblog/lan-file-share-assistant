@@ -206,3 +206,13 @@ M2已完成生产源码与本机实际HTTP链路；手机、目标客户端、�
 - 这补齐本机容量上限验证，不是手机大文件测试或真实Wi-Fi吞吐基准；跨设备性能和60分钟长运行仍待验收。
 - 当前已安装WorkBuddy修订版完整重跑通过：重新读取M3说明，四次独立调用完成probe/start/status与下载/stop。7300字节副本与源文件及状态报告三方SHA-256一致，300秒会话提前停止并清理。主Agent独立核对安装源码、下载字节、终态及监听关闭，补齐第15节当时未完整重跑的缺口。
 - 证据见evidence/m3/continuation.md、runtime-39-capacity.json与workbuddy-current.json。正式M4发布包尚未构建或提审；整机睡眠继续依用户选择暂缓。Windows/Linux后端与真机、手机副本摘要等外部事项仍未完成。
+
+## M3跨平台后端扩展（2026-11-06）
+
+用户明确选择优先Windows/Linux。在隔离分支feat/cross-platform实现原生后端，不改变协议1.0、文件上限、有效期与先预检后分享流程。Windows使用CreateFileW逐层拒绝重解析、TokenUser所有权和用户专属受保护DACL、FileRenameInfoEx原子私有状态替换、GetTickCount64及原生脱离进程；Linux使用POSIX文件原语、sysfs物理设备元数据与IPv4 ioctl及CLOCK_BOOTTIME。macOS原实现保留。
+
+Windows仅限本机固定卷且须支持持久ACL/扩展原子替换，拒绝UNC/设备/ADS/重解析。源读取句柄与运行文件句柄策略分离，后者允许删除共享以支持到期清理。安全能力缺失必须阻止，不能降低权限或计时要求。PowerShell仅只读查询，模块路径限定于子进程环境，不修改网络或全局配置。
+
+原生CI使用私有仓库runner，分别执行Python3.9和3.12的合成文件、ACL/文件安全、跨进程探针、512KiB环回HTTP摘要、停止与短时到期组件。unknown/remote生产宿主仍拒绝，不将runner当作用户电脑。实际Windows/Linux局域网、Agent与整机睡眠独立待验收；macOS生产链路新增真实60秒到期回归。实施记录见cross-platform-plan.md，最终结果见evidence/platforms。此前M2/M3仅macOS实现的叙述保留为阶段历史，以本节和最新证据为准。
+
+最终原生CI四组全部通过，运行42192469347、源码e41754b；macOS完整75项中61通过、14项Windows原生测试跳过。独立代码复核未发现新增确认问题。该结果完成后端适配，不等同于Windows/Linux生产worker、传输中截止、局域网扫码或Agent客户端验收；这些项目与M4正式包仍独立保留。
