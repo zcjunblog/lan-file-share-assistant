@@ -8,7 +8,7 @@
 
 **0.1.0 发布候选** · [标准 Skill 包](releases/0.1.0/lan-file-share-assistant-0.1.0.zip) · [WorkBuddy 包](releases/0.1.0/lan-file-share-assistant-workbuddy-0.1.0.zip) · [安装与兼容性](docs/compatibility.md) · [校验摘要](releases/0.1.0/SHA256SUMS)
 
-当前已完成原生系统CI；macOS的Codex与WorkBuddy开发包已有实际链路验证。**Windows/Linux为实验性支持**，真实局域网与客户端仍待补验。仓库目前保持私有，本版本尚未上传平台解析、提交审核或公开发布。
+当前已完成原生系统CI；macOS的Codex执行工具、WorkBuddy开发版及最终安装包已有实际链路验证。**Windows/Linux为实验性支持**，真实局域网与客户端仍待补验。新版最终包已完成WorkBuddy本机安装验收，仓库保持私有；**0.1.0已提交WorkBuddy审核，尚未确认上线**，详见[发布记录](docs/marketplace/submission.md)。
 
 ## 为文件交付准备
 
@@ -77,7 +77,7 @@
 | Linux，实验性 | Ubuntu 24.04的Python3.9/3.12原生CI通过；安全文件/权限、跨调用探针、环回下载、停止与实际短时到期组件已验证 |
 | 发布候选归档 | 标准包与WorkBuddy包分别解压运行，原始文件、快照及下载摘要独立核对；结果见M4验收记录 |
 
-Windows/Linux完整生产worker、传输中截止、真实局域网扫码和具体Agent尚待设备验收。用户暂缓整机睡眠；真实系统时钟变更、整个宿主退出和手机保存副本的独立摘要也仍待补。最终包的WorkBuddy平台解析及安装后Agent烟测保留为后续检查。
+Windows/Linux完整生产worker、传输中截止、真实局域网扫码和具体Agent尚待设备验收。用户暂缓整机睡眠；真实系统时钟变更、整个宿主退出和手机保存副本的独立摘要也仍待补。新Logo最终包的平台解析与WorkBuddy安装后Agent烟测均已通过，当前已提交审核。
 
 [跨平台CI证据](evidence/platforms/README.md) · [既有客户端与手机记录](evidence/m3/README.md) · [容量和运行时补验](evidence/m3/continuation.md) · [M4归档验收](evidence/m4/README.md)
 
@@ -102,4 +102,4 @@ python3.12 -m venv .venv
 
 [产品设计](memory-bank/design.md) · [开发待办](memory-bank/todo.md) · [预检协议](docs/preflight-and-session-protocol.md) · [协作约定](Agent.md)
 
-公开范围、许可证、收费方式和市场提交另行决定。维护者：[zcjunblog](https://github.com/zcjunblog)。
+GitHub源码公开、许可证与后续定价另行决定；本次WorkBuddy页面显示免费，审核状态见发布记录。维护者：[zcjunblog](https://github.com/zcjunblog)。

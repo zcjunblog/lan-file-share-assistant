@@ -1,0 +1,26 @@
+{
+  "client": "WorkBuddy",
+  "client_version": "5.9.3",
+  "platform": "macOS",
+  "version": "0.1.0",
+  "icon_revision": 2,
+  "archive_sha256": "3e1f51cd27bfe864699c6523f3e158f9998a49270aca483e5d7ab0f193babbf1",
+  "skill_tool_loaded": true,
+  "installed_files_verified": 15,
+  "sdk_independent_flow_calls": [
+    "probe",
+    "start",
+    "status",
+    "stop"
+  ],
+  "eight_actual_preflight_checks_passed": true,
+  "download_bytes": 10600,
+  "source_status_download_sha256_match": true,
+  "stopped": true,
+  "listener_closed_independently": true,
+  "sensitive_resources_removed_independently": true,
+  "installed_files_unchanged_after_agent": true,
+  "phone_tested": false,
+  "real_system_sleep_tested": false,
+  "passed": true
+}

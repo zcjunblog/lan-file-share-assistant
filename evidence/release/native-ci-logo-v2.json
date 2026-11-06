@@ -1,0 +1,37 @@
+{
+  "source_commit": "e5970704d1028f2fed998244e87641a82baddb8c",
+  "run_url": "https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42209276939",
+  "icon_revision": 2,
+  "passed": true,
+  "jobs": [
+    {
+      "job": "windows-2022 / Python 3.12",
+      "backend_tests_passed": true,
+      "release_integrity_tests_passed": true,
+      "native_synthetic_components_passed": true,
+      "cleanup_passed": true
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.9",
+      "backend_tests_passed": true,
+      "release_integrity_tests_passed": true,
+      "native_synthetic_components_passed": true,
+      "cleanup_passed": true
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.12",
+      "backend_tests_passed": true,
+      "release_integrity_tests_passed": true,
+      "native_synthetic_components_passed": true,
+      "cleanup_passed": true
+    },
+    {
+      "job": "windows-2022 / Python 3.9",
+      "backend_tests_passed": true,
+      "release_integrity_tests_passed": true,
+      "native_synthetic_components_passed": true,
+      "cleanup_passed": true
+    }
+  ],
+  "production_windows_linux_lan_and_agent": "not_tested"
+}

@@ -1,12 +1,35 @@
 {
+  "date": "2026-11-06",
+  "platform": "WorkBuddy",
   "version": "0.1.0",
-  "icon_revision": 2,
-  "initial_draft_id": "os_7c3bc8f2252d778f",
-  "initial_candidate_parsed": true,
-  "initial_candidate_is_final": false,
+  "skill_id": "os_24489d8caca849b9",
+  "display_name": "局域网文件分享助手",
+  "stage": "submitted_for_review",
+  "receipt": "已提交审核，预计 7 个工作日内出结果",
+  "receipt_detail": "「技能」资产已提交审核，审核结果将通过通知告知。",
+  "publication_confirmed": false,
+  "marketplace_category": "办公协同",
+  "service_category": "工具 - 办公",
+  "price_label": "免费",
+  "final_candidate_parsed": true,
+  "final_candidate_bytes": 298935,
   "final_candidate_sha256": "3e1f51cd27bfe864699c6523f3e158f9998a49270aca483e5d7ab0f193babbf1",
-  "name_uniqueness_blocks_second_upload": true,
-  "draft_deletion_requires_confirmation": true,
-  "submitted": false,
-  "final_client_smoke": "running"
+  "examples_verified": 3,
+  "icon_revision": 2,
+  "icon_pixels": [
+    512,
+    512
+  ],
+  "icon_bytes": 256656,
+  "avatar_circle_crop_visually_checked": true,
+  "final_installed_agent_smoke": "passed",
+  "windows_linux_support": "experimental_native_ci_passed_real_lan_agent_pending",
+  "github_visibility": "private",
+  "old_draft": {
+    "skill_id": "os_7c3bc8f2252d778f",
+    "never_submitted": true,
+    "permanent_deletion_confirmed_by_user": true,
+    "deleted": true
+  },
+  "source_code_public_license": "undecided"
 }

@@ -1,6 +1,6 @@
 # 0.1.0 发布候选验收
 
-日期：2026-11-06（Asia/Shanghai）。本轮只准备本地发布候选并同步私有GitHub；未上传WorkBuddy解析、未覆盖安装最终包、未提交审核、未上线，未决定公开范围、许可证或价格。
+日期：2026-11-06（Asia/Shanghai）。本节记录M4本地准备阶段，后续Logo二次修订、实际安装和平台提审已完成，见[evidence/release](../release/README.md)；尚未确认上线。GitHub继续私有，许可证另行决定。
 
 ## 包与源码
 
@@ -36,7 +36,7 @@
 
 本地87项回归：73通过、14项Windows原生检查跳过。新增12项分发测试纳入Windows2022/Ubuntu24.04各Python3.9/3.12的原生CI，四组全部成功；后端单测、独立调用probe和原生合成组件也保持通过。见[native-ci.json](native-ci.json)和[CI运行](https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42203566963)。
 
-首轮新增分发CI在Windows的解压源字节比较环节失败。独立Git autocrlf检出复现14项文本资源差异，增加仓库LF规范并明确PNG/ZIP为二进制后，新检出全部15项与最终标准包逐字节一致，四组CI通过。未改运行时逻辑、未更改交付归档摘要；见[检出复现](checkout-normalization.json)。本地既有检出若自行改了源文件或换行，严格字节检查会阻止，不静默认作同一候选包。
+首轮新增分发CI在Windows的解压源字节比较环节失败。独立Git autocrlf检出复现14项文本资源差异，增加仓库LF规范并明确PNG/ZIP为二进制后，新检出全部15项与当时标准包逐字节一致，四组CI通过。未改运行时逻辑、未更改交付归档摘要；见[检出复现](checkout-normalization.json)。本地既有检出若自行改了源文件或换行，严格字节检查会阻止，不静默认作同一候选包。
 
 生命周期验收在截止附近可能读到HTTP已撤销、worker仍清理的过渡态；脚本不展示该状态的入口，仅在有界等待后要求明确expired、资源已清理且监听已关闭。已补状态序列回归，并完整重跑最终归档验收。
 
@@ -67,3 +67,5 @@ verify等待WorkBuddy包60秒到期。成功或失败后调用`<dev-python> tool
 ## 后续
 
 本地归档通过与平台接受分别记录。用户授权后再进行WorkBuddy上传解析、Logo裁切检查、最终包安装后Agent烟测和审核；Windows/Linux真机LAN/Agent、手机副本摘要和整机睡眠保持各自待验收状态。
+
+后续更新：正式应用Logo已按用户要求升级，归档摘要与archive-smoke.json已同步为新版；新版源码e597070的四组CI、最终安装验收与提审回执见evidence/release，先前native-ci.json和checkout-normalization.json保留各自提交时的历史证据。

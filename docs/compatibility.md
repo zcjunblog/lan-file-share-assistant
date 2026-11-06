@@ -29,7 +29,7 @@
 
 使用WorkBuddy包通过客户端自定义技能导入或开放平台添加技能。入口含name/display_name、双语介绍、版本、作者及等量双语示例，格式依据[官方Skill文档](https://open.workbuddy.cn/docs/skill)。
 
-本轮只准备归档和静态校验；尚未上传平台解析或覆盖用户现有WorkBuddy开发包，未提交市场。既有macOS WorkBuddy V5.9.3记录对应前轮开发版本，不能替代本候选包的安装后Agent验收。
+新Logo的0.1.0最终包已在备份旧版本后更新到自有安装目录，并通过macOS WorkBuddy5.9.3的加载、独立probe/start/status/download/stop验收。新Logo候选已在平台成功解析并提交审核；当前页面显示免费，尚未确认审核通过或上线，详见发布记录。
 
 ## 准备运行时
 

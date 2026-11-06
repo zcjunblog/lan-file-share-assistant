@@ -8,5 +8,6 @@
   "prior_version_backed_up_outside_skill_root": true,
   "user_import_metadata_preserved": true,
   "installed_source_matches_final_archive": true,
-  "agent_smoke_pending": true
+  "agent_smoke_pending": false,
+  "agent_smoke_passed": true
 }
