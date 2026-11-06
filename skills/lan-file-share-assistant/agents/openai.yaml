@@ -2,6 +2,6 @@ interface:
   display_name: "局域网文件分享助手"
   short_description: "先检测本地配置，再将指定文件生成限时扫码下载页，支持自动过期与提前停止。"
   icon_small: "./assets/icon-512.png"
-  icon_large: "./assets/icon.svg"
+  icon_large: "./assets/icon-512.png"
   brand_color: "#2866B8"
   default_prompt: "使用 $lan-file-share-assistant 将这些指定文件分享给同一局域网的手机，先检测本地配置，十分钟后关闭。"

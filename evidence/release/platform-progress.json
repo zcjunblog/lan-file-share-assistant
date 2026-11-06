@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "icon_revision": 2,
+  "initial_draft_id": "os_7c3bc8f2252d778f",
+  "initial_candidate_parsed": true,
+  "initial_candidate_is_final": false,
+  "final_candidate_sha256": "3e1f51cd27bfe864699c6523f3e158f9998a49270aca483e5d7ab0f193babbf1",
+  "name_uniqueness_blocks_second_upload": true,
+  "draft_deletion_requires_confirmation": true,
+  "submitted": false,
+  "final_client_smoke": "running"
+}

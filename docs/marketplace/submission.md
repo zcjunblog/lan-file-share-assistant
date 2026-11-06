@@ -1,17 +1,17 @@
 # WorkBuddy发布准备单
 
-日期：2026-11-06（Asia/Shanghai）。状态：**本地发布候选准备；未上传解析、未安装最终包、未提交审核、未上线。**
+日期：2026-11-06（Asia/Shanghai）。状态：**发布执行中。初次候选解析通过；用户要求升级Logo，更新候选包受旧草稿同名占用，正在完成最终包安装验收。未提交审核，未上线。**
 
 - 中文名称：局域网文件分享助手。
 - 英文名称：LAN File Share Assistant。
 - 候选版本：0.1.0，单一版本源为Skill根目录VERSION。
 - 包：releases/0.1.0/lan-file-share-assistant-workbuddy-0.1.0.zip。
-- 图标：skills/lan-file-share-assistant/assets/icon-512.png，512×512；可编辑源为同目录icon.svg。
+- 图标：skills/lan-file-share-assistant/assets/icon-512.png，512×512；同目录icon.svg为配套简化矢量版本，正式位图原图保存在icon-original.png。
 - 封面：docs/images/cover.png；流程：docs/images/workflow.svg。均为产品示意，不含有效二维码、地址或私有资料。
 - 展示介绍与三组双语示例：distribution/workbuddy.json。静态构建要求双语示例非空且数量一致。
 - 建议分类：办公协同/工具，最终以平台实际可选项为准。
 - 支持口径：macOS已有实际客户端证据；Windows/Linux为实验性支持、原生CI通过，真实LAN及Agent待验收。HTTP未加密。
-- 公开范围、许可证、收费方式及平台发布授权：待用户决定；不预选免费或付费，不填造平台Skill ID。
+- 用户已授权本次WorkBuddy发布；GitHub源码继续私有，许可证另行决定。价格及市场范围按平台实际配置记录。
 
 ## 授权后的平台核验
 

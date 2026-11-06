@@ -26,6 +26,8 @@
   },
   "javascriptErrors": 0,
   "manually_reviewed": true,
+  "icon_revision": 2,
+  "icon_sha256": "cd043f860147156479e89cc479e7dd8a47d962142cbc9aa1bbc6a3ef7ffe80ff",
   "system_fonts_redistributed": false,
   "valid_qr_in_promotional_assets": false
 }

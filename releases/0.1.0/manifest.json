@@ -6,8 +6,8 @@
     {
       "profile": "standard",
       "archive": "lan-file-share-assistant-0.1.0.zip",
-      "bytes": 49737,
-      "sha256": "1f4af9d1c8e5a1473c8d0863fe3ca846e9b2cd1970940fac69b90df20e94e78d",
+      "bytes": 298235,
+      "sha256": "6caeef7df96063c535242ee126be2a6990559fcdcd20189ec167931b5d1de798",
       "files": [
         {
           "path": "SKILL.md",
@@ -19,7 +19,7 @@
         },
         {
           "path": "agents/openai.yaml",
-          "sha256": "f4e92eb5f8a71bfaeef7998fdea75e921b83473eeb34223e322a4cbc59171460"
+          "sha256": "0f5b86b04e72306eaa7069a2bb8cd00162e500f31cda3e21508a9371503b1eb6"
         },
         {
           "path": "assets/download.html",
@@ -27,11 +27,11 @@
         },
         {
           "path": "assets/icon-512.png",
-          "sha256": "f4699dce43a11873f5fe55609fd7351627e4fdd58760fc0edffbc7a7e1a5935f"
+          "sha256": "cd043f860147156479e89cc479e7dd8a47d962142cbc9aa1bbc6a3ef7ffe80ff"
         },
         {
           "path": "assets/icon.svg",
-          "sha256": "98280e7094a176ee839ab28441ec6ec0d38ceccbf1969e83ce52575eec83bc86"
+          "sha256": "946be4a93413d386b3ddc7724a8943cedd59a0537ec73b6384b654b59d15172b"
         },
         {
           "path": "references/runtime.md",
@@ -74,8 +74,8 @@
     {
       "profile": "workbuddy",
       "archive": "lan-file-share-assistant-workbuddy-0.1.0.zip",
-      "bytes": 50437,
-      "sha256": "eed06065fdc6f421eeb191159b2155ca8a654cc6fbf6c278dbbcfd6fddf67c2b",
+      "bytes": 298935,
+      "sha256": "3e1f51cd27bfe864699c6523f3e158f9998a49270aca483e5d7ab0f193babbf1",
       "files": [
         {
           "path": "SKILL.md",
@@ -87,7 +87,7 @@
         },
         {
           "path": "agents/openai.yaml",
-          "sha256": "f4e92eb5f8a71bfaeef7998fdea75e921b83473eeb34223e322a4cbc59171460"
+          "sha256": "0f5b86b04e72306eaa7069a2bb8cd00162e500f31cda3e21508a9371503b1eb6"
         },
         {
           "path": "assets/download.html",
@@ -95,11 +95,11 @@
         },
         {
           "path": "assets/icon-512.png",
-          "sha256": "f4699dce43a11873f5fe55609fd7351627e4fdd58760fc0edffbc7a7e1a5935f"
+          "sha256": "cd043f860147156479e89cc479e7dd8a47d962142cbc9aa1bbc6a3ef7ffe80ff"
         },
         {
           "path": "assets/icon.svg",
-          "sha256": "98280e7094a176ee839ab28441ec6ec0d38ceccbf1969e83ce52575eec83bc86"
+          "sha256": "946be4a93413d386b3ddc7724a8943cedd59a0537ec73b6384b654b59d15172b"
         },
         {
           "path": "references/runtime.md",

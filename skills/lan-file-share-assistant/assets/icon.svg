@@ -1,11 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
   <title id="title">局域网文件分享助手</title>
-  <desc id="desc">白蓝色文件向扫描框交接的图标；扫描框为品牌图形，不是二维码。</desc>
-  <rect width="512" height="512" rx="104" fill="#edf4ff"/>
-  <path d="M137 83h132l68 68v224a30 30 0 0 1-30 30H137a30 30 0 0 1-30-30V113a30 30 0 0 1 30-30Z" fill="#fff" stroke="#bdd3ef" stroke-width="9" stroke-linejoin="round"/>
-  <path d="M267 85v48a20 20 0 0 0 20 20h47" fill="#e0ecfa" stroke="#bdd3ef" stroke-width="9" stroke-linejoin="round"/>
-  <path d="M157 187h94M157 231h65" fill="none" stroke="#2866b8" stroke-width="17" stroke-linecap="round"/>
-  <rect x="235" y="260" width="203" height="181" rx="28" fill="#edf4ff"/>
-  <path d="M282 313v-23h23M368 290h23v23M391 377v23h-23M305 400h-23v-23" fill="none" stroke="#2866b8" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M220 345h125m-26-27 28 27-28 27" fill="none" stroke="#2866b8" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+  <desc id="desc">深蓝渐变上的白色文件与青蓝扫码交付标记；正式应用图标的简化矢量配套版，不是二维码。</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#0631b8"/><stop offset=".6" stop-color="#0054ee"/><stop offset="1" stop-color="#18beed"/></linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#dcecff"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#35ebf2"/><stop offset=".55" stop-color="#0fc6eb"/><stop offset="1" stop-color="#0088df"/></linearGradient>
+    <filter id="shadow" x="-.3" y="-.3" width="1.6" height="1.8"><feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#002d78" flood-opacity=".3"/></filter>
+  </defs>
+  <rect width="512" height="512" fill="url(#blue)"/>
+  <path d="M0 416 512 80v75L0 471Z" fill="#28d6fb" opacity=".13"/>
+  <g filter="url(#shadow)">
+    <rect x="85" y="66" width="220" height="304" rx="43" fill="#a5e4ff" stroke="#d5f5ff" stroke-width="2"/>
+    <path d="M154 87h131l75 75v205a35 35 0 0 1-35 35H154a40 40 0 0 1-40-40V127a40 40 0 0 1 40-40Z" fill="url(#paper)" stroke="#fff" stroke-width="2"/>
+    <path d="M285 88v45a30 30 0 0 0 30 30h44" fill="#d6edff" stroke="#fff" stroke-width="2"/>
+    <path d="M164 183h108M164 226h82" stroke="#0754e6" stroke-width="20" stroke-linecap="round"/>
+    <rect x="237" y="247" width="183" height="177" rx="43" fill="url(#cyan)" stroke="#a7f9ff" stroke-width="2"/>
+  </g>
+  <path d="M276 302v-21h23M360 281h23v21M383 363v23h-23M299 386h-23v-23" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M276 334h86m-29-28 29 28-29 28" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

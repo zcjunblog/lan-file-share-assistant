@@ -7,7 +7,7 @@
   "profiles": [
     {
       "profile": "standard",
-      "archive_sha256": "1f4af9d1c8e5a1473c8d0863fe3ca846e9b2cd1970940fac69b90df20e94e78d",
+      "archive_sha256": "6caeef7df96063c535242ee126be2a6990559fcdcd20189ec167931b5d1de798",
       "source_files_verified": 15,
       "eight_checks_passed": true,
       "cross_invocation_probe_and_health": true,
@@ -20,7 +20,7 @@
     },
     {
       "profile": "workbuddy",
-      "archive_sha256": "eed06065fdc6f421eeb191159b2155ca8a654cc6fbf6c278dbbcfd6fddf67c2b",
+      "archive_sha256": "3e1f51cd27bfe864699c6523f3e158f9998a49270aca483e5d7ab0f193babbf1",
       "source_files_verified": 15,
       "eight_checks_passed": true,
       "cross_invocation_probe_and_health": true,
