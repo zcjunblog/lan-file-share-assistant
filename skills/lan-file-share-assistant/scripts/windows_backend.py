@@ -510,7 +510,18 @@ try {
     $adapters = @(Get-NetAdapter -Physical | Where-Object {$_.Status -eq 'Up'})
     foreach ($adapter in $adapters) {
         $stage = 'ipv4_addresses'
-        foreach ($ip in @(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4)) {
+        try {
+            $addresses = @(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4)
+        } catch {
+            # A physical/up adapter may have no IPv4 binding. Only the exact
+            # native no-match record is ordinary absence; query/ACL failures
+            # must still reach the outer fail-closed handler.
+            if ($_.FullyQualifiedErrorId -eq 'CmdletizationQuery_NotFound,Get-NetIPAddress') {
+                continue
+            }
+            throw
+        }
+        foreach ($ip in $addresses) {
             if ($ip.AddressState -eq 'Preferred') {
                 $result += @{interface=[string]$adapter.Name;address=[string]$ip.IPAddress}
             }

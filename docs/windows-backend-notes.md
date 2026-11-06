@@ -18,6 +18,8 @@ A workspace is created atomically using a protected security descriptor containi
 
 `GetTickCount64` provides system-uptime milliseconds, with no ordinary monotonic fallback. Suspend-inclusive behavior is based on the native clock contract, not a performed sleep test. Background processes use `DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP`. A fixed, read-only PowerShell script queries only up physical adapters and preferred IPv4 addresses; Python independently filters exact RFC1918 ranges. Its output is UTF-8 and execution is bounded to ten seconds. The child process receives only the trusted inbox Windows PowerShell module directory in its copied `PSModulePath`, avoiding incompatible module autoloading inherited from a PowerShell 7 parent. The caller's environment is unchanged. No adapters, firewall, routes or permissions are changed.
 
+An up physical adapter without an IPv4 binding produces the native `CmdletizationQuery_NotFound,Get-NetIPAddress` error in Windows PowerShell. The script skips only that exact per-adapter no-match record. Permission failures and all other query errors still stop discovery. A PowerShell policy test evaluates the production script with synthetic command results to prove this distinction, physical/up selection and Preferred-state filtering; it does not count as a real-network test.
+
 ## Primary references
 
 - [CreateFileW sharing modes and reparse flags](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)

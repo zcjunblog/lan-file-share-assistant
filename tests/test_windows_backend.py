@@ -314,6 +314,50 @@ class WindowsNativeTests(unittest.TestCase):
             self.assertTrue(item['interface'])
             self.assertTrue(core.rfc1918(item['address']))
 
+    def test_interface_script_skips_only_no_match_preserving_other_query_errors(self):
+        # Execute the production PowerShell policy against synthetic command
+        # results. This is a query-boundary test, not real adapter acceptance.
+        fixture = r'''
+function Get-NetAdapter {
+    [CmdletBinding()] param([switch]$Physical)
+    if (-not $Physical) {[pscustomobject]@{ifIndex=99;Status='Up';Name='virtual'}}
+    [pscustomobject]@{ifIndex=1;Status='Up';Name='empty'}
+    [pscustomobject]@{ifIndex=2;Status='Up';Name='physical'}
+    [pscustomobject]@{ifIndex=3;Status='Down';Name='down'}
+}
+function Get-NetIPAddress {
+    [CmdletBinding()] param([uint32]$InterfaceIndex,[string]$AddressFamily)
+    if ($InterfaceIndex -eq 1) {
+        $category = [System.Management.Automation.ErrorCategory]::ObjectNotFound
+        $record = [System.Management.Automation.ErrorRecord]::new(
+            [System.Exception]::new('synthetic'), $env:LAN_SHARE_QUERY_ERROR, $category, $null)
+        $PSCmdlet.ThrowTerminatingError($record)
+    }
+    if ($InterfaceIndex -eq 2 -and $AddressFamily -eq 'IPv4') {
+        [pscustomobject]@{AddressState='Preferred';IPAddress='192.168.1.7'}
+        [pscustomobject]@{AddressState='Tentative';IPAddress='10.0.0.99'}
+    } else {[pscustomobject]@{AddressState='Preferred';IPAddress='10.0.0.98'}}
+}
+'''
+        environment = dict(os.environ,
+                           PSModulePath=os.path.join(os.environ['SystemRoot'], 'System32',
+                                                     'WindowsPowerShell', 'v1.0', 'Modules'))
+        executable = os.path.join(os.environ['SystemRoot'], 'System32', 'WindowsPowerShell',
+                                  'v1.0', 'powershell.exe')
+        for error_id in ('CmdletizationQuery_NotFound', 'PermissionDenied', 'OtherQueryFailure'):
+            with self.subTest(error_id=error_id):
+                result = subprocess.run([executable, '-NoProfile', '-NonInteractive', '-Command',
+                                         fixture + backend._INTERFACES_SCRIPT], capture_output=True,
+                                        timeout=15, env=dict(environment, LAN_SHARE_QUERY_ERROR=error_id))
+                if error_id == 'CmdletizationQuery_NotFound':
+                    self.assertEqual(result.returncode, 0)
+                    self.assertEqual(json.loads(result.stdout.decode('utf-8-sig')),
+                                     [{'interface': 'physical', 'address': '192.168.1.7'}])
+                else:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertEqual(backend._powershell_error_id(result.stderr),
+                                     error_id + ',Get-NetIPAddress')
+
 
 if __name__ == '__main__':
     unittest.main()
