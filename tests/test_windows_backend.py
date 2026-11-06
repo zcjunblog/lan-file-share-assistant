@@ -113,7 +113,7 @@ class WindowsNativeTests(unittest.TestCase):
         fd = backend.open_private(str(target))
         try:
             with native_stage('private_replace_open_target'):
-                os.replace(str(replacement), str(target))
+                backend.replace_private(str(replacement), str(target))
             with native_stage('private_read_new_target'):
                 self.assertEqual(target.read_bytes(), b'new')
             with native_stage('private_unlink_new_target'):
@@ -143,7 +143,10 @@ class WindowsNativeTests(unittest.TestCase):
                   "@{sid=$s;items=$items}|ConvertTo-Json -Depth 6 -Compress")
         result = subprocess.run(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command',
                                  script], capture_output=True, text=True,
-                                env=dict(os.environ, LAN_SHARE_TEST_PATHS=json.dumps([str(root), str(child)])),
+                                env=dict(os.environ,
+                                         PSModulePath=os.path.join(os.environ['SystemRoot'],
+                                             'System32', 'WindowsPowerShell', 'v1.0', 'Modules'),
+                                         LAN_SHARE_TEST_PATHS=json.dumps([str(root), str(child)])),
                                 timeout=15, check=False)
         if result.returncode:
             error = subprocess.CalledProcessError(result.returncode, result.args)
@@ -154,6 +157,29 @@ class WindowsNativeTests(unittest.TestCase):
         for item in acl['items']:
             self.assertEqual(item['owner'], acl['sid'])
             self.assertEqual(set(item['ids']), {acl['sid']})
+
+    def test_private_replace_creates_new_name_and_refuses_untrusted_targets(self):
+        root = backend.workspace(self.base / 'private')
+        original, target = root / 'temporary.bin', root / 'state.bin'
+        with os.fdopen(backend.create_private(str(original)), 'wb') as stream:
+            stream.write(b'synthetic')
+        backend.replace_private(str(original), str(target))
+        self.assertFalse(original.exists())
+        self.assertEqual(target.read_bytes(), b'synthetic')
+        backend.check_private(target)
+        next_file = root / 'next.bin'
+        with os.fdopen(backend.create_private(str(next_file)), 'wb') as stream:
+            stream.write(b'replacement')
+        child = backend.make_private_dir(root / 'child')
+        for destination in (target.parent.parent / 'outside.bin', child / 'state.bin', child):
+            with self.assertRaises(core.ShareError):
+                backend.replace_private(str(next_file), str(destination))
+        subprocess.run(['icacls.exe', str(target), '/grant', '*S-1-1-0:(R)'],
+                       capture_output=True, timeout=10, check=True)
+        with self.assertRaises(core.ShareError):
+            backend.replace_private(str(next_file), str(target))
+        self.assertEqual(next_file.read_bytes(), b'replacement')
+        self.assertEqual(target.read_bytes(), b'synthetic')
 
     def test_private_creation_has_explicit_user_owner_and_refuses_existing_objects(self):
         root = backend.workspace(self.base / 'private')

@@ -59,12 +59,18 @@ class _Native:
         class AclSize(ctypes.Structure):
             _fields_ = [('count', w.DWORD), ('used', w.DWORD), ('free', w.DWORD)]
 
+        class RenameInfo(ctypes.Structure):
+            _fields_ = [('flags', w.DWORD), ('root', w.HANDLE),
+                        ('length', w.DWORD), ('name', w.WCHAR * 1)]
+
         self.FileInfo, self.SecurityAttributes, self.AclSize = FileInfo, SecurityAttributes, AclSize
+        self.RenameInfo = RenameInfo
         P = ctypes.c_void_p
         declarations = [
             (self.k, 'CreateFileW', [w.LPCWSTR, w.DWORD, w.DWORD, P, w.DWORD, w.DWORD, w.HANDLE], w.HANDLE),
             (self.k, 'CloseHandle', [w.HANDLE], w.BOOL),
             (self.k, 'GetFileInformationByHandle', [w.HANDLE, ctypes.POINTER(FileInfo)], w.BOOL),
+            (self.k, 'SetFileInformationByHandle', [w.HANDLE, ctypes.c_int, P, w.DWORD], w.BOOL),
             (self.k, 'GetFileType', [w.HANDLE], w.DWORD),
             (self.k, 'GetDriveTypeW', [w.LPCWSTR], w.UINT),
             (self.k, 'GetVolumeInformationW', [w.LPCWSTR, w.LPWSTR, w.DWORD,
@@ -147,8 +153,9 @@ class _Native:
             self.error()
         return descriptor
 
-    def open(self, path, directory=False, share=1, security=False):
-        access = 0x80 if directory else 0x80000000  # FILE_READ_ATTRIBUTES / GENERIC_READ
+    def open(self, path, directory=False, share=1, security=False, access=None):
+        if access is None:
+            access = 0x80 if directory else 0x80000000  # FILE_READ_ATTRIBUTES / GENERIC_READ
         if security:
             access |= 0x00020000  # READ_CONTROL
         handle = self.k.CreateFileW(path, access, share, None, 3,
@@ -223,7 +230,7 @@ def _api():
     return _native
 
 
-def _walk(path, directory=False, share=1, private=False, protected=False, held=None):
+def _walk(path, directory=False, share=1, private=False, protected=False, held=None, access=None):
     """Hold non-write/non-delete ancestor handles until the final open finishes.
 
     Denying directory write sharing also prevents reparse-point mutations while
@@ -245,7 +252,7 @@ def _walk(path, directory=False, share=1, private=False, protected=False, held=N
             handles.append(handle)
             if info.volume != volume:
                 raise ValueError('Volume changed while opening path')
-        handle, info = api.open(path, directory=directory, share=share, security=private)
+        handle, info = api.open(path, directory=directory, share=share, security=private, access=access)
         handles.append(handle)
         if info.volume != volume:
             raise ValueError('Volume changed while opening path')
@@ -370,6 +377,52 @@ def make_private_dir(path):
             api.k.LocalFree(descriptor)
 
 
+def replace_private(source, target):
+    """Atomically rename one private file within its private parent directory.
+
+    Legacy MoveFileEx/os.replace refuses a target with existing handles even
+    when they allow deletion. FileRenameInfoEx POSIX semantics retain those
+    readers and switch the target name atomically. No unlink/copy fallback.
+    """
+    source, target = validate_path(str(source)), validate_path(str(target))
+    source_path, target_path = Path(source), Path(target)
+    if (ntpath.normcase(str(source_path.parent)) != ntpath.normcase(str(target_path.parent)) or
+            ntpath.normcase(source) == ntpath.normcase(target)):
+        raise ShareError('workspace_unwritable', '原子运行文件替换必须位于同一个私有目录并使用不同名称。')
+    api, parent, source_handle, target_handle = _api(), None, None, None
+    ancestors = []
+    try:
+        parent = _walk(str(source_path.parent), directory=True, private=True, held=ancestors)
+        # DELETE authorizes only renaming this validated runtime file; no data
+        # write access is requested, and sources never enter this private API.
+        source_handle = _walk(source, share=7, private=True, access=0x00010000 | 0x80)
+        try:
+            target_handle = _walk(target, share=7, private=True)
+        except FileNotFoundError:
+            pass  # Initial atomic save may install a new target name.
+        encoded = target.encode('utf-16-le')
+        length = max(ctypes.sizeof(api.RenameInfo), api.RenameInfo.name.offset + len(encoded) + 2)
+        buffer = ctypes.create_string_buffer(length)
+        rename = api.RenameInfo.from_buffer(buffer)
+        rename.flags = 0x00000001 | 0x00000002  # REPLACE_IF_EXISTS | POSIX_SEMANTICS
+        rename.root = None
+        rename.length = len(encoded)
+        ctypes.memmove(ctypes.addressof(buffer) + api.RenameInfo.name.offset, encoded, len(encoded))
+        if not api.k.SetFileInformationByHandle(source_handle, 22, buffer, length):  # FileRenameInfoEx
+            error = ctypes.WinError(ctypes.get_last_error())
+            error.native_stage = 'private_posix_rename'
+            raise error
+    except (OSError, ValueError) as exc:
+        raise ShareError('workspace_unwritable', 'Windows私有运行文件原子替换失败。',
+                         '需要支持FileRenameInfoEx与POSIX替换语义的本机Windows卷；不要降级为先删除再移动。') from exc
+    finally:
+        for handle in (target_handle, source_handle, parent):
+            if handle is not None:
+                api.k.CloseHandle(handle)
+        for ancestor in reversed(ancestors):
+            api.k.CloseHandle(ancestor)
+
+
 def check_private(path):
     value = validate_path(str(path))
     api, handle = _api(), None
@@ -474,9 +527,13 @@ def interfaces():
     try:
         system_root = os.environ.get('SystemRoot', r'C:\Windows')
         executable = ntpath.join(system_root, r'System32\WindowsPowerShell\v1.0\powershell.exe')
+        environment = dict(os.environ)
+        # A pwsh7 parent exports its own module directories. WinPS5 must resolve
+        # only the trusted inbox modules shipped beside its own executable.
+        environment['PSModulePath'] = ntpath.join(system_root, r'System32\WindowsPowerShell\v1.0\Modules')
         process = subprocess.run([executable, '-NoProfile', '-NonInteractive', '-Command',
                                   _INTERFACES_SCRIPT], capture_output=True, timeout=10, check=False,
-                                 creationflags=0x08000000)
+                                 creationflags=0x08000000, env=environment)
         if process.returncode:
             error = subprocess.CalledProcessError(process.returncode, process.args)
             error.native_stage = 'interfaces_powershell'

@@ -37,7 +37,11 @@ def save(path, value):
         with os.fdopen(fd, 'w', encoding='utf-8') as stream:
             json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
             stream.write('\n')
-        os.replace(str(temp), str(path))
+        if sys.platform == 'win32':
+            import windows_backend
+            windows_backend.replace_private(str(temp), str(path))
+        else:
+            os.replace(str(temp), str(path))
     finally:
         temp.unlink(missing_ok=True)
 
