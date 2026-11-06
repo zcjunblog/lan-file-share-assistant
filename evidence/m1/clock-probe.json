@@ -1,0 +1,13 @@
+{
+  "platform_probe": "macOS_only",
+  "system_sleep_performed": false,
+  "system_clock_changed": false,
+  "file_service_started": false,
+  "sleep_behavior_reference": "https://developer.apple.com/documentation/kernel/1646199-mach_continuous_time",
+  "actual_sleep_resume_and_expiry": "not_tested",
+  "api_status": "available",
+  "api": "mach_continuous_time",
+  "positive_progress": true,
+  "short_wait_observed": true,
+  "sleep_inclusive_property": "documented_by_vendor_not_physically_tested"
+}

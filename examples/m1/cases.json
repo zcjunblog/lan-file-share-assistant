@@ -1,0 +1,335 @@
+{
+  "report_cases": [
+    {
+      "name": "all_local_conditions_pass",
+      "changes": {},
+      "expected": "supported"
+    },
+    {
+      "name": "qr_dependency_missing",
+      "changes": {
+        "qr": {
+          "status": "fail",
+          "reason_code": "dependency_missing",
+          "remediation": [
+            "在任务虚拟环境准备Segno，再重新预检。"
+          ],
+          "summary": "当前解释器缺少Segno，尚不能生成扫码图片。"
+        }
+      },
+      "expected": "needs_action"
+    },
+    {
+      "name": "cloud_only",
+      "changes": {
+        "host_context": {
+          "status": "fail",
+          "reason_code": "remote_host_only",
+          "remediation": [
+            "切换到文件所在电脑的本地执行宿主，重新预检。"
+          ],
+          "summary": "合成情境：只具有远端执行能力，无法使用文件所在电脑的局域网。"
+        }
+      },
+      "expected": "unsupported"
+    },
+    {
+      "name": "unknown_host",
+      "changes": {
+        "host_context": {
+          "status": "unknown",
+          "reason_code": "host_unconfirmed",
+          "evidence": "not_tested",
+          "remediation": [
+            "确认执行主机与文件所在电脑的关系。"
+          ],
+          "summary": "尚未确认程序执行位置与文件所在电脑的关系。"
+        }
+      },
+      "expected": "needs_action"
+    },
+    {
+      "name": "ambiguous_interface",
+      "changes": {
+        "interface": {
+          "status": "unknown",
+          "reason_code": "interface_ambiguous",
+          "remediation": [
+            "从本机候选中选择实际使用的局域网地址，重新预检。"
+          ],
+          "summary": "有多个候选地址，尚未确定应绑定哪个局域网接口。"
+        }
+      },
+      "expected": "needs_action"
+    },
+    {
+      "name": "port_busy",
+      "changes": {
+        "bind": {
+          "status": "fail",
+          "reason_code": "port_in_use",
+          "remediation": [
+            "选择其他非特权端口，不停止占用端口的其他程序。"
+          ],
+          "summary": "指定端口已被其他程序占用，尚不能绑定。"
+        }
+      },
+      "expected": "needs_action"
+    },
+    {
+      "name": "background_forbidden",
+      "changes": {
+        "lifecycle": {
+          "status": "fail",
+          "reason_code": "lifecycle_unavailable",
+          "remediation": [
+            "换用能够维持和控制本地进程的宿主。"
+          ],
+          "summary": "合成情境：宿主不允许维持并控制分享进程。"
+        }
+      },
+      "expected": "unsupported"
+    },
+    {
+      "name": "lifecycle_unproven",
+      "changes": {
+        "lifecycle": {
+          "status": "unknown",
+          "reason_code": "lifecycle_unverified",
+          "evidence": "not_tested",
+          "remediation": [
+            "验证当前宿主的进程存活与控制能力。"
+          ],
+          "summary": "缺少当前宿主服务存活与停止控制的有效依据。"
+        }
+      },
+      "expected": "needs_action"
+    },
+    {
+      "name": "source_unreadable",
+      "changes": {
+        "source_files": {
+          "status": "fail",
+          "reason_code": "source_invalid",
+          "remediation": [
+            "重新指定可读的普通文件并复检。"
+          ],
+          "summary": "合成情境：指定文件无法读取，不能创建文件白名单。"
+        }
+      },
+      "expected": "needs_action"
+    },
+    {
+      "name": "workspace_no_space",
+      "changes": {
+        "workspace": {
+          "status": "fail",
+          "reason_code": "insufficient_space",
+          "remediation": [
+            "选择有足够快照空间的任务目录。"
+          ],
+          "summary": "合成情境：任务目录空间不足，无法准备私有快照。"
+        }
+      },
+      "expected": "needs_action"
+    }
+  ],
+  "request_cases": [
+    {
+      "name": "normal_request",
+      "changes": {},
+      "valid": true
+    },
+    {
+      "name": "automatic_address",
+      "changes": {
+        "bind_address": null
+      },
+      "valid": true
+    },
+    {
+      "name": "windows_physical_path",
+      "changes": {
+        "file_paths": [
+          "C:\\Synthetic\\说明.txt"
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "minimum_ttl",
+      "changes": {
+        "ttl_seconds": 60
+      },
+      "valid": true
+    },
+    {
+      "name": "maximum_ttl",
+      "changes": {
+        "ttl_seconds": 3600
+      },
+      "valid": true
+    },
+    {
+      "name": "ttl_too_short",
+      "changes": {
+        "ttl_seconds": 59
+      },
+      "valid": false
+    },
+    {
+      "name": "ttl_too_long",
+      "changes": {
+        "ttl_seconds": 3601
+      },
+      "valid": false
+    },
+    {
+      "name": "boolean_ttl",
+      "changes": {
+        "ttl_seconds": true
+      },
+      "valid": false
+    },
+    {
+      "name": "all_interfaces",
+      "changes": {
+        "bind_address": "0.0.0.0"
+      },
+      "valid": false
+    },
+    {
+      "name": "loopback",
+      "changes": {
+        "bind_address": "127.0.0.1"
+      },
+      "valid": false
+    },
+    {
+      "name": "link_local",
+      "changes": {
+        "bind_address": "169.254.1.2"
+      },
+      "valid": false
+    },
+    {
+      "name": "public_ipv4",
+      "changes": {
+        "bind_address": "8.8.8.8"
+      },
+      "valid": false
+    },
+    {
+      "name": "reserved_is_private_but_not_rfc1918",
+      "changes": {
+        "bind_address": "192.0.2.1"
+      },
+      "valid": false
+    },
+    {
+      "name": "relative_path",
+      "changes": {
+        "file_paths": [
+          "资料.txt"
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "network_path",
+      "changes": {
+        "file_paths": [
+          "\\\\server\\share\\说明.txt"
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "parent_traversal",
+      "changes": {
+        "file_paths": [
+          "/synthetic/../secret.txt"
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "duplicate_path",
+      "changes": {
+        "file_paths": [
+          "/synthetic/a.txt",
+          "/synthetic/a.txt"
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "local_without_evidence",
+      "changes": {
+        "host_context": {
+          "kind": "local",
+          "evidence": "none"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "url_as_file",
+      "changes": {
+        "file_paths": [
+          "https://example.invalid/a.txt"
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "privileged_port",
+      "changes": {
+        "port": 80
+      },
+      "valid": false
+    }
+  ],
+  "deadline_cases": [
+    {
+      "name": "not_due",
+      "wall_now": 100,
+      "mono_now": 10,
+      "wall_deadline": 160,
+      "mono_deadline": 70,
+      "expired": false
+    },
+    {
+      "name": "at_wall_deadline",
+      "wall_now": 160,
+      "mono_now": 69,
+      "wall_deadline": 160,
+      "mono_deadline": 70,
+      "expired": true
+    },
+    {
+      "name": "wall_clock_rolled_back",
+      "wall_now": 20,
+      "mono_now": 70,
+      "wall_deadline": 160,
+      "mono_deadline": 70,
+      "expired": true
+    },
+    {
+      "name": "wall_clock_forward",
+      "wall_now": 500,
+      "mono_now": 11,
+      "wall_deadline": 160,
+      "mono_deadline": 70,
+      "expired": true
+    },
+    {
+      "name": "wake_after_deadline",
+      "wall_now": 200,
+      "mono_now": 15,
+      "wall_deadline": 160,
+      "mono_deadline": 70,
+      "expired": true
+    }
+  ]
+}

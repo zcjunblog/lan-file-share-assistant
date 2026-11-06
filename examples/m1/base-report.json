@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "preflight_id": "00000000000000000000000000000000",
+  "request_digest": "aa148d624a98b37d7e7ac34c85f6de48c8c413012a3715b0dae5f180bdad8a34",
+  "checked_at": "2026-11-06T04:00:00Z",
+  "valid_until": "2026-11-06T04:00:30Z",
+  "result": "supported",
+  "can_start": true,
+  "can_publish": false,
+  "receiver_status": "not_tested",
+  "limitations": [
+    "合成数据，未运行任何服务，未验证手机或防火墙。"
+  ],
+  "checks": [
+    {
+      "id": "host_context",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成本机关系证据",
+      "evidence": "fixture",
+      "remediation": []
+    },
+    {
+      "id": "runtime",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成运行时检查",
+      "evidence": "fixture",
+      "remediation": []
+    },
+    {
+      "id": "source_files",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成文件白名单",
+      "evidence": "fixture",
+      "remediation": []
+    },
+    {
+      "id": "workspace",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成可写目录",
+      "evidence": "fixture",
+      "remediation": []
+    },
+    {
+      "id": "qr",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成二维码能力",
+      "evidence": "fixture",
+      "remediation": []
+    },
+    {
+      "id": "interface",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成接口选择",
+      "evidence": "fixture",
+      "remediation": []
+    },
+    {
+      "id": "bind",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成端口检查",
+      "evidence": "fixture",
+      "remediation": []
+    },
+    {
+      "id": "lifecycle",
+      "status": "pass",
+      "reason_code": "ok",
+      "summary": "合成生命周期证据",
+      "evidence": "fixture",
+      "remediation": []
+    }
+  ]
+}

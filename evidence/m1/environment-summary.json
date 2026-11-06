@@ -1,0 +1,55 @@
+{
+  "stage": "M1",
+  "date": "2026-11-06",
+  "profiles": [
+    {
+      "profile": "system-python",
+      "python": "3.9.6",
+      "platform": "Darwin",
+      "qr_status": "missing_dependency",
+      "qr_library_version": null,
+      "qr_independent_decode": "not_tested",
+      "candidate_count": 1,
+      "bind_and_close_count": 2,
+      "collision_rejection_count": 2,
+      "synthetic_read_write": true,
+      "synthetic_replacement_detected": true,
+      "symlink_detected": true,
+      "nofollow_available": true,
+      "receiver_reachability": "not_tested",
+      "listener_started": false
+    },
+    {
+      "profile": "with-qr",
+      "python": "3.12.14",
+      "platform": "Darwin",
+      "qr_status": "generated",
+      "qr_library_version": "1.6.6",
+      "qr_independent_decode": "passed",
+      "candidate_count": 1,
+      "bind_and_close_count": 2,
+      "collision_rejection_count": 2,
+      "synthetic_read_write": true,
+      "synthetic_replacement_detected": true,
+      "symlink_detected": true,
+      "nofollow_available": true,
+      "receiver_reachability": "not_tested",
+      "listener_started": false
+    }
+  ],
+  "bounded_child": {
+    "heartbeat_across_tool_calls": true,
+    "self_ended": true,
+    "elapsed_seconds": 12.091,
+    "owned_process_still_running": false,
+    "network_used": false
+  },
+  "limits": {
+    "actual_phone_download": "not_tested",
+    "other_clients": "not_tested",
+    "windows_linux_cloud_sandbox": "synthetic_cases_only",
+    "sleep_and_clock_changes": "reference_rule_only",
+    "production_preflight_and_file_service": "not_implemented",
+    "full_session_background_lifetime": "not_tested"
+  }
+}
