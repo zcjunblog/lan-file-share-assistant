@@ -21,6 +21,7 @@
         "required": ["id", "status", "reason_code", "summary", "evidence", "remediation"],
         "properties": {
           "id": {"enum": ["host_context", "runtime", "source_files", "workspace", "qr", "interface", "bind", "lifecycle"]},
+          "elapsed_ms": {"type": "integer", "minimum": 0},
           "status": {"enum": ["pass", "fail", "unknown"]},
           "reason_code": {"type": "string", "pattern": "^[a-z_]+$"},
           "summary": {"type": "string", "minLength": 1},

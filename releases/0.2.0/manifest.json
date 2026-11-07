@@ -1,0 +1,159 @@
+{
+  "name": "lan-file-share-assistant",
+  "version": "0.2.0",
+  "stage": "release_candidate_not_submitted",
+  "packages": [
+    {
+      "profile": "standard",
+      "archive": "lan-file-share-assistant-0.2.0.zip",
+      "bytes": 304026,
+      "sha256": "b2069ae6e475fabc382e5f5ddb5be7f26ee31f78f1c289178790e0a693754385",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "9e09c29bbbb7e20c711a4a410c8b1212b997304041d7ae44913ac4778a3323fc"
+        },
+        {
+          "path": "VERSION",
+          "sha256": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "0f5b86b04e72306eaa7069a2bb8cd00162e500f31cda3e21508a9371503b1eb6"
+        },
+        {
+          "path": "assets/download.html",
+          "sha256": "fa4ae7ffe9322d030b92b7d9c0df2815d7d4f80bf3ab7bf991cb9606081578a1"
+        },
+        {
+          "path": "assets/icon-512.png",
+          "sha256": "cd043f860147156479e89cc479e7dd8a47d962142cbc9aa1bbc6a3ef7ffe80ff"
+        },
+        {
+          "path": "assets/icon.svg",
+          "sha256": "946be4a93413d386b3ddc7724a8943cedd59a0537ec73b6384b654b59d15172b"
+        },
+        {
+          "path": "references/runtime.md",
+          "sha256": "78b825e7300aad575765ea9df641fd61eccb4a28b102d57de0d8ad9e1f78ec4b"
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "a5a79998744ea333eb770d89cadff14ba563f9c7f75875783e951eb1cb606276"
+        },
+        {
+          "path": "scripts/core.py",
+          "sha256": "8fcc2051f0c8921f84025624648971f503240c8d7523bfede23d3b4fa40562e8"
+        },
+        {
+          "path": "scripts/http_service.py",
+          "sha256": "a48a61d30490533072a88944457ec751ad3537ac461d72fa6ae1f8064686c702"
+        },
+        {
+          "path": "scripts/lan_share.py",
+          "sha256": "248a2ce02fa001b1a4342b7ddad8c3496011cdf26d6984b1e2283d2bf5d07838"
+        },
+        {
+          "path": "scripts/linux_backend.py",
+          "sha256": "d802df3fdcfda4bff25f387b65c7280de6b9e38c6c62d5ab1e6c6394b1741bb5"
+        },
+        {
+          "path": "scripts/live_folder.py",
+          "sha256": "5c42f1a42d04d0fa88f708211950db8b2f6d2dabe53045dec16087a00a0b3509"
+        },
+        {
+          "path": "scripts/preflight.py",
+          "sha256": "b36a1eadeecfa991f862c81e04e43fce7ffe54d54c787587052e74447ab2f44c"
+        },
+        {
+          "path": "scripts/session.py",
+          "sha256": "2272ef9c9606cf3089649af4997eb72941f13917cc7271fa8d7573e488a6821a"
+        },
+        {
+          "path": "scripts/windows_backend.py",
+          "sha256": "8e313f6e3d21393288f25b2145cde6f62e35047e087e92364af9cac7e5bb0a97"
+        },
+        {
+          "path": "start-folder-windows.cmd",
+          "sha256": "c2eafd2983bc2af60605262c6aa1cb5bca6bdd6d070b174282df0fb3176217a5"
+        }
+      ]
+    },
+    {
+      "profile": "workbuddy",
+      "archive": "lan-file-share-assistant-workbuddy-0.2.0.zip",
+      "bytes": 304908,
+      "sha256": "772fca42a56456f38d3d21134e6e02aee38141ed7a4123f7d72fe807fec4476a",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "78907f0e816cdc2f254894f9f2cf5f073a255a32e8d43397696a4c1fe7e4a2fd"
+        },
+        {
+          "path": "VERSION",
+          "sha256": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "0f5b86b04e72306eaa7069a2bb8cd00162e500f31cda3e21508a9371503b1eb6"
+        },
+        {
+          "path": "assets/download.html",
+          "sha256": "fa4ae7ffe9322d030b92b7d9c0df2815d7d4f80bf3ab7bf991cb9606081578a1"
+        },
+        {
+          "path": "assets/icon-512.png",
+          "sha256": "cd043f860147156479e89cc479e7dd8a47d962142cbc9aa1bbc6a3ef7ffe80ff"
+        },
+        {
+          "path": "assets/icon.svg",
+          "sha256": "946be4a93413d386b3ddc7724a8943cedd59a0537ec73b6384b654b59d15172b"
+        },
+        {
+          "path": "references/runtime.md",
+          "sha256": "78b825e7300aad575765ea9df641fd61eccb4a28b102d57de0d8ad9e1f78ec4b"
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "a5a79998744ea333eb770d89cadff14ba563f9c7f75875783e951eb1cb606276"
+        },
+        {
+          "path": "scripts/core.py",
+          "sha256": "8fcc2051f0c8921f84025624648971f503240c8d7523bfede23d3b4fa40562e8"
+        },
+        {
+          "path": "scripts/http_service.py",
+          "sha256": "a48a61d30490533072a88944457ec751ad3537ac461d72fa6ae1f8064686c702"
+        },
+        {
+          "path": "scripts/lan_share.py",
+          "sha256": "248a2ce02fa001b1a4342b7ddad8c3496011cdf26d6984b1e2283d2bf5d07838"
+        },
+        {
+          "path": "scripts/linux_backend.py",
+          "sha256": "d802df3fdcfda4bff25f387b65c7280de6b9e38c6c62d5ab1e6c6394b1741bb5"
+        },
+        {
+          "path": "scripts/live_folder.py",
+          "sha256": "5c42f1a42d04d0fa88f708211950db8b2f6d2dabe53045dec16087a00a0b3509"
+        },
+        {
+          "path": "scripts/preflight.py",
+          "sha256": "b36a1eadeecfa991f862c81e04e43fce7ffe54d54c787587052e74447ab2f44c"
+        },
+        {
+          "path": "scripts/session.py",
+          "sha256": "2272ef9c9606cf3089649af4997eb72941f13917cc7271fa8d7573e488a6821a"
+        },
+        {
+          "path": "scripts/windows_backend.py",
+          "sha256": "8e313f6e3d21393288f25b2145cde6f62e35047e087e92364af9cac7e5bb0a97"
+        },
+        {
+          "path": "start-folder-windows.cmd",
+          "sha256": "c2eafd2983bc2af60605262c6aa1cb5bca6bdd6d070b174282df0fb3176217a5"
+        }
+      ]
+    }
+  ]
+}

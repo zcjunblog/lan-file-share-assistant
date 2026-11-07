@@ -333,6 +333,8 @@ def error_codes(error):
 def backend_tests(release=False):
     pattern = 'test_distribution.py' if release else 'test_*backend*.py'
     suite = unittest.defaultTestLoader.discover(str(REPO / 'tests'), pattern=pattern)
+    if not release:
+        suite.addTests(unittest.defaultTestLoader.discover(str(REPO / 'tests'), pattern='test_live_folder.py'))
     result = ScrubbedTestResult()
     # Capture incidental output; only the whitelist below reaches hosted logs.
     from contextlib import redirect_stdout, redirect_stderr

@@ -2,7 +2,7 @@
 
 ## 当前适用范围
 
-0.1.0发布候选，Python3.9+、Segno1.6.6。Windows/Linux为实验性支持。已实现三个原生后端：
+Python3.9+、Segno1.6.6。Windows/Linux为实验性支持。已实现三个原生后端：
 
 | 系统 | 文件与私有目录 | 网卡与连续计时 |
 | --- | --- | --- |
@@ -80,3 +80,22 @@ stop通过私有本地控制凭据请求所属服务关闭，控制凭据不会�
 WorkBuddy首轮60秒测试中，工具调用延迟使下载落在截止之后，服务按期关闭且资源清理。有效期包含Agent在ready之后的工具调用/思考/交付时间，默认10分钟通常比极短有效期留有更多交互时间。测试或交付超时不能假装成功，也不能替用户静默延长。
 
 正常停止会清理快照和凭据；SIGKILL这类强制终止会让操作系统关闭监听，但可能保留POSIX 0700/0600或Windows用户专属ACL私有资源。M3实测这种状态不再展示链接。只有已独立确认该会话进程结束后才能清理其专用目录；绝不根据旧PID或端口猜测并杀进程。
+
+## 共享文件夹
+
+在 Agent 中先执行 `probe`，随后在独立调用的 `start` 里用 `--folder` 代替 `--file`。`status` 确认可用后会返回 `shared_folder`、二维码和截止时间。把文件放入这个新建目录，手机扫码页面会自动更新，也可手动刷新。每个会话新建一个空目录，停止或到期后电脑里的文件仍保留。
+
+目录顶层最多共享20个普通文件，单个2GiB、合计5GiB。文件连续两次观察稳定后出现在页面。复制大文件时，可先在其他目录完成写入再移入。替换或移走文件会撤销原下载入口。符号链接、硬链接、Windows重解析点、隐藏项、常见临时文件和子目录不参与共享。
+
+## Windows 双击启动
+
+在技能目录通过 PowerShell 一次性准备运行环境：
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+此后双击 `start-folder-windows.cmd`。启动器优先用该环境，执行本机预检，成功后打开专用文件夹和二维码图片。默认有效期10分钟。终端会显示截止时间，也可按回车提前停止。多网卡时先在本机终端用 `interfaces` 查询，再给 `quick-folder` 指定 `--bind-address`。状态目录为 `$env:LOCALAPPDATA\lan-file-share-assistant`。
+
+`quick-folder` 供用户在文件所在电脑的终端直接运行。Agent 仍按分开的 `probe`、`start` 和 `status` 验证宿主。命令中的 `command_ms`、各预检项的 `elapsed_ms` 和 `worker_ready_ms` 可定位进入脚本后的耗时。Python 安装、依赖下载、客户端排队和 Agent 等待需分别记录。

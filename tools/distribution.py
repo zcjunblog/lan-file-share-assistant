@@ -6,11 +6,11 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 NAME = 'lan-file-share-assistant'
 SOURCE = ROOT / 'skills' / NAME
-ROOT_FILES = {'SKILL.md', 'VERSION', 'requirements.txt'}
+ROOT_FILES = {'SKILL.md', 'VERSION', 'requirements.txt', 'start-folder-windows.cmd'}
 DIRECTORIES = {'scripts': {'.py'}, 'references': {'.md'},
                'assets': {'.html', '.svg', '.png'}, 'agents': {'.yaml'}}
 RESOURCE_FILES = ROOT_FILES | {
-    'scripts/core.py', 'scripts/http_service.py', 'scripts/lan_share.py',
+    'scripts/core.py', 'scripts/http_service.py', 'scripts/lan_share.py', 'scripts/live_folder.py',
     'scripts/linux_backend.py', 'scripts/windows_backend.py', 'scripts/preflight.py', 'scripts/session.py',
     'references/runtime.md', 'assets/download.html', 'assets/icon.svg', 'assets/icon-512.png',
     'agents/openai.yaml',

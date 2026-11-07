@@ -19,6 +19,9 @@ LIMITATIONS = ['HTTP未加密，仅用于可信局域网。', '接收端连通�
 
 def validate_request(req, authorized_paths):
     fields = {'schema_version', 'title', 'file_paths', 'ttl_seconds', 'bind_address', 'port', 'host_context', 'transport'}
+    folder_mode = isinstance(req, dict) and req.get('folder_mode') is True
+    if folder_mode:
+        fields.add('folder_mode')
     if not isinstance(req, dict) or set(req) != fields or req['schema_version'] != '1.0' or req['transport'] != 'http':
         raise ShareError('request_invalid', '请求字段或传输方式无效；首版仅支持HTTP。')
     if not isinstance(req['title'], str) or not 1 <= len(req['title'].strip()) <= 120 or any(ord(c) < 32 for c in req['title']):
@@ -28,7 +31,8 @@ def validate_request(req, authorized_paths):
         if type(v) is not int or (not low <= v <= high and not (key == 'port' and v == 0)):
             raise ShareError('request_invalid', '有效期为60至3600秒；端口为0或1024至65535。')
     paths = req['file_paths']
-    if not isinstance(paths, list) or not 1 <= len(paths) <= 20 or any(not isinstance(p, str) for p in paths):
+    valid_count = isinstance(paths, list) and (len(paths) == 0 if folder_mode else 1 <= len(paths) <= 20)
+    if not valid_count or any(not isinstance(p, str) for p in paths):
         raise ShareError('source_invalid', '需要1至20个明确文件。')
     for p in paths:
         physical(p)
@@ -94,7 +98,11 @@ def verify_probe(root, probe_id):
         began = time.time()
         until = time.monotonic() + 2
         while time.monotonic() < until:
-            hb = load(directory / 'heartbeat.json')
+            try:
+                hb = load(directory / 'heartbeat.json')
+            except FileNotFoundError:
+                time.sleep(.05)
+                continue
             if hb['nonce'] == owner['nonce'] and began < hb['at'] <= time.time() and time.time() - owner['started_at'] < 60:
                 save(directory / 'stop', {'nonce': owner['nonce']})
                 while time.monotonic() < until:
@@ -115,6 +123,7 @@ def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worke
     checks, manifest, root = [], [], None
 
     def check(item, operation, evidence='observed'):
+        began = time.monotonic()
         try:
             summary = operation()
             checks.append(dict(id=item, status='pass', reason_code='ok', summary=summary,
@@ -126,6 +135,7 @@ def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worke
             checks.append(dict(id=item, status='fail', reason_code=item + '_unavailable',
                                summary='本机检查未成功（%s）；未开放文件服务。' % type(e).__name__,
                                evidence='observed', remediation=['检查本机依赖、文件及执行权限后重新预检。']))
+        checks[-1]['elapsed_ms'] = round((time.monotonic() - began) * 1000)
 
     def host():
         context = req['host_context']
@@ -141,6 +151,8 @@ def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worke
 
     def sources():
         nonlocal manifest
+        if req.get('folder_mode'):
+            return '本次授权仅限程序新建的共享文件夹，不扫描现有目录。'
         manifest = inspect_sources(req['file_paths'])
         return '已按独立授权范围核对%d个普通文件。' % len(manifest)
 
@@ -149,6 +161,8 @@ def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worke
         root = workspace(root_path)
         if any(root == Path(p) or root in Path(p).parents for p in req['file_paths']):
             raise ShareError('source_invalid', '待分享文件不能位于本项目运行状态目录内。')
+        if req.get('folder_mode'):
+            return '专用私有目录可写，可创建本次共享文件夹。'
         total = sum(f['size_bytes'] for f in manifest)
         reserve = max(0, total - reserved_bytes) + max(64 * 1024 ** 2, total // 10)
         if shutil.disk_usage(str(root)).free < reserve:

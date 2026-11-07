@@ -13,6 +13,7 @@ import re
 
 from core import Deadline, ShareError, create_private, digest, identifier, load, private_mkdir, save, snapshot, utc, workspace
 from http_service import ShareServer
+from live_folder import LiveFolder
 from preflight import LIMITATIONS, launch, run
 
 TERMINAL = ('expired', 'stopped', 'failed')
@@ -129,7 +130,12 @@ def worker(root, session_id):
             state['heartbeat_at'] = time.time()
             save(directory / 'state.json', state)
 
-        files = snapshot(manifest, directory / 'snapshots', progress)
+        folder = None
+        if req.get('folder_mode'):
+            folder = LiveFolder(private_mkdir(directory / 'shared-files'))
+            files = []
+        else:
+            files = snapshot(manifest, directory / 'snapshots', progress)
         progress()
         # All dynamic checks refreshed after copying, before bind/listen. The running
         # worker was admitted using the just-observed cross-call probe.
@@ -140,7 +146,9 @@ def worker(root, session_id):
         secret = load(directory / 'secrets.json')
         deadline = Deadline(req['ttl_seconds'])
         state.update(files=files, ready_at=utc(), expires_at=utc(deadline.wall))
-        server = ShareServer((req['bind_address'], req['port']), directory, state, secret['access_token'], deadline)
+        if folder:
+            state['mode'] = 'folder'
+        server = ShareServer((req['bind_address'], req['port']), directory, state, secret['access_token'], deadline, folder=folder)
         state['port'] = server.server_address[1]
         url = 'http://%s:%d/s/%s/' % (state['bind_address'], state['port'], secret['access_token'])
         import segno
@@ -158,7 +166,7 @@ def worker(root, session_id):
         thread.start()
         if not verified_health(state, secret['access_token'], verify_files=True):
             raise ShareError('health_unverified', '启动自检未通过，未发布链接。')
-        state.update(state='ready', heartbeat_at=time.time())
+        state.update(state='ready', heartbeat_at=time.time(), worker_ready_ms=round((time.monotonic() - started) * 1000))
         save(directory / 'state.json', state)
         while True:
             if deadline.due():
@@ -272,6 +280,10 @@ def status(root, session_id):
                   qr_png=str(directory / 'qr.png'), qr_svg=str(directory / 'qr.svg'), expires_at=state['expires_at'],
                   files=[{k: f[k] for k in ('download_name', 'size_bytes', 'sha256')} for f in state['files']],
                   limitations=LIMITATIONS)
+    if state.get('mode') == 'folder':
+        result.update(mode='folder', shared_folder=str(directory / 'shared-files'))
+    if 'worker_ready_ms' in state:
+        result['worker_ready_ms'] = state['worker_ready_ms']
     return result
 
 

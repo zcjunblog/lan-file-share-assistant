@@ -3,6 +3,7 @@
 No source writes, ACL rewriting of existing directories, network changes or
 third-party Windows dependencies. See docs/windows-backend-notes.md.
 """
+from contextlib import contextmanager
 import ctypes
 import ipaddress
 import json
@@ -419,6 +420,27 @@ def replace_private(source, target):
         for handle in (target_handle, source_handle, parent):
             if handle is not None:
                 api.k.CloseHandle(handle)
+        for ancestor in reversed(ancestors):
+            api.k.CloseHandle(ancestor)
+
+
+@contextmanager
+def hold_private_directory(path):
+    """Hold the verified directory and its ancestor chain through enumeration/open."""
+    value = validate_path(str(path))
+    api, handle = _api(), None
+    ancestors = []
+    try:
+        handle = _walk(value, directory=True, private=True, protected=True, held=ancestors)
+        info = api.FileInfo()
+        if not api.k.GetFileInformationByHandle(handle, ctypes.byref(info)):
+            api.error()
+        yield info.volume, info.index_high, info.index_low
+    except (OSError, ValueError) as exc:
+        raise ShareError('folder_unavailable', '共享目录无法核验，可能已移动、替换或权限改变。') from exc
+    finally:
+        if handle is not None:
+            api.k.CloseHandle(handle)
         for ancestor in reversed(ancestors):
             api.k.CloseHandle(ancestor)
 

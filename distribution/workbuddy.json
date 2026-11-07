@@ -1,17 +1,17 @@
 {
   "display_name": "局域网文件分享助手",
   "display_name_en": "LAN File Share Assistant",
-  "description_zh": "将明确指定的本机文件临时分享给同一局域网的手机或电脑。先检测本地配置，再生成本地二维码与下载页面，支持自动过期、提前停止和临时副本清理。适合交付需求文档、操作手册、图片与资料包。macOS已有客户端实测；Windows/Linux为实验性支持，原生CI已通过，实际网络与客户端仍需验收。HTTP未加密。",
-  "description_en": "Share explicitly selected local files with devices on the same LAN. Check local capabilities first, then create an offline QR code and a temporary download page with automatic expiry and early stop. macOS has client-level testing; Windows/Linux support is experimental with native CI coverage. Real LAN and client acceptance remain pending. HTTP is unencrypted.",
+  "description_zh": "把需求文档、操作手册、图片或培训资料交给同一局域网的手机和电脑。可以选定一批文件，也可以新建专用共享文件夹。程序先检测本机环境，再生成限时二维码。接收方用浏览器扫码下载。共享文件夹中的文件放入、替换或移出后，同一个页面会更新清单。可随时结束分享，到了截止时间也会自动关闭。文件保留在电脑上。请在互通、可信的局域网内使用，下载通过未加密的 HTTP 传输。",
+  "description_en": "Share documents, manuals, images, or training materials with phones and computers on the same local network. Select files or create a dedicated share folder. After a local readiness check, the skill creates an expiring QR code that opens a browser download page. The same page updates when you add, replace, or remove files in the share folder. Stop sharing whenever you like or let it expire automatically. Your local files remain on your computer. Use a trusted, reachable LAN because downloads use unencrypted HTTP.",
   "author": "zcjunblog",
   "examples_zh": [
     "把刚生成的需求确认书分享给我的手机，先检测本地配置，十分钟后关闭。",
-    "将我指定的这三份操作手册生成局域网扫码下载页，五分钟后自动过期。",
+    "建一个专用共享文件夹，放进来的资料用同一个二维码取件，十分钟后关闭。",
     "停止刚才的文件分享，确认下载入口已关闭、临时副本已清理。"
   ],
   "examples_en": [
     "Share the requirements document just generated with my phone. Check local capabilities first and close the share after ten minutes.",
-    "Create a LAN QR download page for these three selected manuals and expire it after five minutes.",
+    "Create a share folder and a QR code that keeps showing the latest files. Close the share after ten minutes.",
     "Stop the previous share and verify that the listener is closed and temporary copies are removed."
   ]
 }
