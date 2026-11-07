@@ -128,3 +128,6 @@
 - [x] 实现并验证两次独立调用、失败即反馈、首步无链接和二维码输出、第二步真实健康核验。候选双包在 macOS 解压验证通过。
 - [x] Windows Server 2022、Ubuntu 24.04 各 Python 3.9 和 3.12 四组[原生 CI](https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42379832105)通过。`bd2d7e2` 两个候选包可匿名下载且摘要与本地一致。
 - [ ] 在用户 Windows 客户端使用同一句指定文件指令，记录从发送指令到二维码可见的完整耗时及各阶段。真实 Windows 客户端耗时尚未知。
+- [x] 2026-11-07 在原有 WorkBuddy 资产中提交 0.2.1 免费更新。提交前 0.1.0 显示已发布、公开。0.2.1 的[提交回执](../evidence/release/workbuddy-0.2.1-submission.json)显示预计 7 个工作日内出审核结果。
+- [x] 同步 GitHub 0.2.1 源码、README 和两个安装包。[版本下载](https://github.com/zcjunblog/lan-file-share-assistant/releases/tag/v0.2.1)
+- [ ] WorkBuddy 审核通过后，确认市场显示 0.2.1。

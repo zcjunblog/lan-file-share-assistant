@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-07",
+  "platform": "WorkBuddy",
+  "display_name": "局域网文件分享助手",
+  "skill_id": "os_24489d8caca849b9",
+  "action": "update_existing_version",
+  "version": "0.2.1",
+  "previous_version_observed_before_submission": "0.1.0",
+  "previous_version_status_observed_before_submission": "已发布 · 公开",
+  "stage": "submitted_for_review",
+  "receipt": "已提交审核，预计 7 个工作日内出结果",
+  "publication_confirmed": false,
+  "price_label": "免费",
+  "marketplace_category": "办公协同",
+  "service_category": "工具 - 办公",
+  "archive": "lan-file-share-assistant-workbuddy-0.2.1.zip",
+  "archive_bytes": 305149,
+  "archive_sha256": "ed1dc38b407cebfe6ffdfcf8e2c2fae9bb93fa8b4aac6eec62f9f7eada5ee625",
+  "package_parsed": true,
+  "existing_logo_uploaded": true,
+  "examples_verified": 3,
+  "native_ci": "https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42379832105"
+}

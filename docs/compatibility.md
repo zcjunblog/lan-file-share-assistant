@@ -1,11 +1,11 @@
 # 安装与兼容性
 
-0.1.0为发布候选。标准包与WorkBuddy包均包含完整运行源码；业务脚本、HTML页面、参考和依赖清单逐字节一致，WorkBuddy包仅扩展SKILL.md的展示元数据。版本来自Skill根目录VERSION。
+当前 GitHub 版本为 0.2.1。标准包与 WorkBuddy 包均包含完整运行源码，业务脚本、HTML 页面、参考和依赖清单逐字节一致。WorkBuddy 包扩展 SKILL.md 的展示元数据。版本来自 Skill 根目录 VERSION。
 
 ## 安装包
 
-- 标准包：`releases/0.1.0/lan-file-share-assistant-0.1.0.zip`。
-- WorkBuddy包：`releases/0.1.0/lan-file-share-assistant-workbuddy-0.1.0.zip`。
+- [标准包](../releases/0.2.1/lan-file-share-assistant-0.2.1.zip)。
+- [WorkBuddy 包](../releases/0.2.1/lan-file-share-assistant-workbuddy-0.2.1.zip)。
 - 对照同目录SHA256SUMS核验下载摘要，再解压或导入。无需复制仓库开发测试、证据或示例状态。
 
 标准包解压后只有一个lan-file-share-assistant顶层目录。保留SKILL.md、VERSION、requirements.txt、scripts、references、assets和agents完整相对位置；不要只复制入口文件。
@@ -21,7 +21,7 @@
 | Cursor | `.cursor/skills/lan-file-share-assistant/` | 入口格式适配；客户端实测待补 |
 | 其他Agent | 客户端明确支持的Skills位置或自定义导入 | 逐宿主执行能力检测，不承诺通用后台服务 |
 
-可使用系统复制或文件管理器操作。本项目不修改客户端设置、不自动覆盖已有安装；更新前保留现有版本。启动后要求Agent读取SKILL.md，依次完成probe、独立调用start和独立status，不能跳过宿主和生命周期检测。
+可使用系统复制或文件管理器操作，更新前保留现有版本。启动后由 Agent 读取 SKILL.md，执行 `start --chat`，再在下一次独立工具调用执行 `status`，核验后展示二维码。
 
 目录规则参考：[Codex Skills](https://developers.openai.com/codex/skills/)、[Claude Code Skills](https://code.claude.com/docs/en/skills)、[Cursor Skills](https://cursor.com/docs/context/skills)。以具体客户端版本和策略为准。
 
@@ -29,7 +29,7 @@
 
 使用WorkBuddy包通过客户端自定义技能导入或开放平台添加技能。入口含name/display_name、双语介绍、版本、作者及等量双语示例，格式依据[官方Skill文档](https://open.workbuddy.cn/docs/skill)。
 
-新Logo的0.1.0最终包已在备份旧版本后更新到自有安装目录，并通过macOS WorkBuddy5.9.3的加载、独立probe/start/status/download/stop验收。新Logo候选已在平台成功解析并提交审核；当前页面显示免费，尚未确认审核通过或上线，详见发布记录。
+0.1.0 曾在 macOS WorkBuddy 5.9.3 中完成加载、扫码链接下载与停止验收，开放平台显示该版已公开发布。0.2.1 已通过平台解析并以免费更新提交审核。详见[提审回执](../evidence/release/workbuddy-0.2.1-submission.json)。
 
 ## 准备运行时
 

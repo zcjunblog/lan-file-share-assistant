@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2866b8?style=flat-square" alt="MIT License"></a>
-  <a href="releases/0.1.0/manifest.json"><img src="https://img.shields.io/badge/version-0.1.0-2866b8?style=flat-square" alt="Version 0.1.0"></a>
+  <a href="https://github.com/zcjunblog/lan-file-share-assistant/releases/tag/v0.2.1"><img src="https://img.shields.io/badge/version-0.2.1-2866b8?style=flat-square" alt="Version 0.2.1"></a>
   <img src="https://img.shields.io/badge/Python-3.9%2B-183450?style=flat-square" alt="Python 3.9 or newer">
   <a href="https://github.com/zcjunblog/lan-file-share-assistant/actions/workflows/native-platforms.yml"><img src="https://github.com/zcjunblog/lan-file-share-assistant/actions/workflows/native-platforms.yml/badge.svg?branch=main" alt="Native platform CI"></a>
 </p>
@@ -31,14 +31,12 @@
 
 ## 核心能力
 
-**0.2.0 候选版**支持新建共享文件夹。放入、替换或移出文件，同一个扫码页会自动更新。会话到期或提前结束后，文件留在电脑上。Windows 可在一次性准备运行环境后双击启动。使用方法见[运行与故障处理](skills/lan-file-share-assistant/references/runtime.md#共享文件夹)。
-
-**0.2.1 候选版**优化在 AI 对话里直接发起的分享。指定文件后，程序一次执行环境检查、探针和启动，下一次工具调用确认服务可用后即交付二维码。可下载[通用候选包](releases/0.2.1/lan-file-share-assistant-0.2.1.zip)和 [WorkBuddy 候选包](releases/0.2.1/lan-file-share-assistant-workbuddy-0.2.1.zip)。
+**0.2.1** 缩短了在 AI 对话中发起分享的流程。指定文件后，程序合并环境检查和启动，独立核验服务可用后交付二维码。也可新建专用共享文件夹，放入、替换或移出文件后，同一个扫码页会自动更新。会话结束后文件留在电脑上。Windows 在备好运行环境后也可双击启动。详见[运行参考](skills/lan-file-share-assistant/references/runtime.md)。
 
 | 能力 | 交付方式 |
 | --- | --- |
 | **先检测，再分享** | 检查执行位置、运行时、文件、专用目录、二维码、网卡、端口及进程生命周期；缺少条件时给出原因与复检步骤 |
-| **文件范围明确** | 仅处理用户逐项授权的普通文件，原文件只读，以本次私有快照提供下载 |
+| **文件范围明确** | 分享明确选定的文件，或通过新建的专用共享文件夹持续更新清单 |
 | **扫码即可取件** | 本机生成PNG/SVG二维码，接收方通过同一可互通局域网的浏览器下载 |
 | **分享自动过期** | 默认10分钟，可选1至60分钟；截止由后台程序执行，刷新页面不会续期 |
 | **可以提前结束** | 校验本次会话归属后停止分享，中断进行中的传输，撤销凭据并清理临时副本 |
@@ -51,10 +49,10 @@
 
 | 使用方式 | 入口 |
 | --- | --- |
-| 通用 Agent 客户端 | [下载标准 Skill 包](https://raw.githubusercontent.com/zcjunblog/lan-file-share-assistant/main/releases/0.1.0/lan-file-share-assistant-0.1.0.zip) |
-| WorkBuddy 自定义技能导入 | [下载 WorkBuddy 包](https://raw.githubusercontent.com/zcjunblog/lan-file-share-assistant/main/releases/0.1.0/lan-file-share-assistant-workbuddy-0.1.0.zip) |
+| 通用 Agent 客户端 | [下载 0.2.1 标准包](https://github.com/zcjunblog/lan-file-share-assistant/releases/download/v0.2.1/lan-file-share-assistant-0.2.1.zip) |
+| WorkBuddy 自定义技能导入 | [下载 0.2.1 WorkBuddy 包](https://github.com/zcjunblog/lan-file-share-assistant/releases/download/v0.2.1/lan-file-share-assistant-workbuddy-0.2.1.zip) |
 | 直接使用源码 | [skills/lan-file-share-assistant](skills/lan-file-share-assistant/SKILL.md) |
-| 核验归档 | [SHA256SUMS](releases/0.1.0/SHA256SUMS) · [逐文件清单](releases/0.1.0/manifest.json) |
+| 核验归档 | [SHA256SUMS](releases/0.2.1/SHA256SUMS) · [逐文件清单](releases/0.2.1/manifest.json) |
 
 解压后保留整个`lan-file-share-assistant`目录，按客户端规则导入。标准包和WorkBuddy包使用相同业务文件，后者仅扩展展示元数据和三组双语示例。
 
@@ -77,7 +75,7 @@ python3 -m venv .venv
 
 > 使用局域网文件分享助手，把刚生成的需求确认书分享给我的手机，先检测本地配置，十分钟后关闭。
 
-> 将我指定的三份操作手册生成扫码下载页，五分钟后自动过期。
+> 建一个专用共享文件夹，放进来的资料用同一个二维码取件，十分钟后关闭。
 
 > 停止刚才的文件分享，确认下载入口已关闭、临时副本已清理。
 
@@ -89,9 +87,9 @@ Agent会核对实际产物与授权范围，执行预检并在独立工具调用
 
 | 阶段 | 处理内容 | 可以查看的结果 |
 | --- | --- | --- |
-| **01 · 确定范围** | 核对指定文件、分享标题与有效期 | 本次文件清单与运行位置 |
-| **02 · 本机预检** | 执行八项检查，确认跨调用进程存活 | 逐项结论、失败原因与复检方法 |
-| **03 · 准备快照** | 复制私有副本，核对来源身份和内容摘要 | 固定的文件版本与准备状态 |
+| **01 · 确定范围** | 核对指定文件或选择新建共享文件夹，确定有效期 | 本次共享范围与运行位置 |
+| **02 · 本机预检** | 检查环境并核对本机进程能否启动和停止 | 逐项结论、失败原因与复检方法 |
+| **03 · 准备资料** | 为指定文件创建私有快照，或新建空的专用共享文件夹 | 本次会话的文件范围与准备状态 |
 | **04 · 启动自检** | 绑定选定接口，独立核验健康和文件访问 | 可发布的真实就绪状态 |
 | **05 · 交付入口** | 展示本地二维码、链接、截止时间与停止方式 | 本次接收者使用的限时入口 |
 | **06 · 接收下载** | 在另一台同网设备浏览并保存文件 | 接收方实际下载结果 |
@@ -118,20 +116,20 @@ Agent会核对实际产物与授权范围，执行预检并在独立工具调用
 | **Linux · 实验性** | Ubuntu24.04 × Python3.9/3.12原生CI通过，包含文件/权限、后台探针、环回下载、停止和实际短时到期组件 |
 | **其他 Agent** | 标准Skill格式可以接入，后台执行与网络能力需要在具体客户端验证 |
 
-最终WorkBuddy安装验收按四次独立调用完成probe、start、status与下载、stop；10,600字节的源文件、状态摘要和下载副本一致。归档另完成独立解压、二维码回读、提前停止与真实60秒自然到期检查。当前本地回归为73项通过、14项Windows原生测试按环境跳过。
+0.2.1 双包在已准备依赖的 macOS 上完成独立解压、两次调用交付二维码、下载摘要核对和停止清理。Windows 与 Linux 四组原生 CI 通过，Windows 真机对话从发送到显示二维码的耗时仍待实测。
 
 Windows/Linux完整生产worker、传输中截止、真实LAN与Agent仍待设备验收；云端CI不替代这些结果。整机睡眠恢复、实际系统时钟变更、整个宿主退出和手机保存副本摘要也仍待补验。
 
-**WorkBuddy0.1.0已提交审核，尚未确认上线。** GitHub源码、导入包与平台审核状态分别记录。
+**GitHub v0.2.1 已提供下载。WorkBuddy 市场的 0.2.1 更新已提交审核。** 提交前，开放平台显示同一技能的 0.1.0 已公开发布。
 
-[系统验收](evidence/platforms/README.md) · [最终包与提审记录](evidence/release/README.md) · [归档验收](evidence/m4/README.md) · [容量补验](evidence/m3/continuation.md)
+[0.2.1 提审回执](evidence/release/workbuddy-0.2.1-submission.json) · [原生 CI](https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42379832105) · [历史验收](evidence/release/README.md)
 
 ## 运行要求与边界
 
 - 在可信、可互通的局域网使用，**HTTP未加密**。防火墙、访客网络、AP隔离和客户端权限会影响接收方访问。
 - 只绑定经过核对的物理IPv4私有接口；不自动关闭防火墙、修改VPN/路由、绑定所有网卡或开启公网穿透。
 - 使用新的专用运行目录和足够磁盘空间。Windows要求本机固定卷与原生私有ACL，拒绝UNC、网络卷、备用数据流及重解析点。
-- 首版提供下载，不提供上传、目录共享、长期托管、设备自动发现、HTTPS或已下载副本撤回。
+- 共享文件夹仅包含本次新建目录顶层的普通文件。下载服务面向临时取件，使用 HTTP，无法撤回接收方已经保存的文件。
 
 遇到问题时，按`reason_code`和`remediation`区分运行环境、文件、权限、接口、绑定及生命周期故障，再单独检查接收方网络。命令与处理方式见[运行参考](skills/lan-file-share-assistant/references/runtime.md)。
 
