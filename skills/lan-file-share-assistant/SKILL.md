@@ -17,26 +17,20 @@ description: 在可互通的局域网内，用手机或电脑扫码下载指定�
 
 ## 准备与运行
 
-首次运行或遇到依赖、接口、停止问题时，阅读[运行与故障处理](references/runtime.md)。选择可运行Python3.9+和Segno1.6.6的解释器；不使用开发者的绝对路径，也不改全局环境。`<scripts>`表示本Skill的scripts目录，`<runtime>`是用户任务下一个新的专用目录，使用绝对物理路径。该目录保存凭据，POSIX权限0700；Windows使用仅当前用户的原生私有ACL。不能复用普通资料目录。
+对话内收到明确文件和本机执行依据后，直接使用以下两次工具调用。优先使用已有虚拟环境或客户端已知的 Python3.9+。解释器未知时，Windows 先用 `py -3`，命令缺失才试 `python`。`<scripts>` 是本技能的脚本目录，`<runtime>` 是任务下专用私有目录的绝对物理路径。遇到依赖、接口或权限问题再查看[运行与故障处理](references/runtime.md)。
 
-1. 用同一解释器执行：
+1. 调用程序检查环境并准备会话。`--chat` 会在同一次调用内完成预检和受控探针，结果只包含待核验会话：
    ```sh
-   <python> <scripts>/lan_share.py probe --work-dir <runtime>
+   <python> <scripts>/lan_share.py start --chat --work-dir <runtime> --host-kind local --host-evidence desktop_adapter --file <file1> --title "项目交付资料" --ttl-seconds 600
    ```
-   此步骤没有文件服务。取得probe_id后，在**下一次独立执行工具调用**的60秒内继续；同一脚本里串联probe和start不能证明跨调用存活。
-2. 根据确立的本机依据、文件授权与有效期直接执行`start`，程序已包含完整预检：
+   `desktop_adapter` 仅用于真实桌面执行适配器，用户确认用 `user_confirmed`。无法确认时用 `--host-kind unknown --host-evidence none`。共享文件夹模式用 `--folder` 代替全部 `--file`。若返回 `blocked`，说明第一项实际失败及修复办法。缺依赖时用同一个解释器按运行参考处理，避免反复寻找环境、重装或自动重试。多网卡时读取候选，选址明确后用 `--bind-address` 指定。
+2. 取得 `session_id` 后立即在**下一次独立工具调用**执行核验：
    ```sh
-   <python> <scripts>/lan_share.py start --work-dir <runtime> --probe-id <probe_id> --host-kind local --host-evidence desktop_adapter --file <file1> --file <file2> --title "项目交付资料" --ttl-seconds 600
+   <python> <scripts>/lan_share.py status --work-dir <runtime> --id <session_id> --wait-seconds 15
    ```
-   `desktop_adapter`仅用于真实桌面执行适配器。用户确认用`user_confirmed`。不确定时使用`--host-kind unknown --host-evidence none`，不得为通过检测伪造依据。共享文件夹模式用`--folder`代替全部`--file`参数。用户只要求检测时才运行`preflight`。
-3. 若返回blocked，按八项检查中的reason_code、summary、remediation说明具体原因和复检方法；不生成假链接。多网卡时用`interfaces`读取候选，确定实际连接用途后`--bind-address`选择，无法确定则请用户选择。不要修改VPN、防火墙、路由或停止其他进程。
-4. preparing表示快照尚在准备；用status轮询，不称分享成功。无论start是否返回ready，在**下一次独立工具调用**执行：
-   ```sh
-   <python> <scripts>/lan_share.py status --work-dir <runtime> --id <session_id>
-   ```
-   只有`state=ready`且`can_publish=true`才展示链接和qr_png/qr_svg。有效期从服务就绪开始，跨调用核验和生成回复也会消耗时间；一分钟这类短会话尤其需要及时交付。可以在同一次独立status调用中完成本机下载摘要验证，但probe与后续启动仍须跨调用。到期如实说明，重新分享遵循用户授权的期限，不静默续期。将二维码作为本地图片展示，并给出文件清单、截止时间、HTTP提示和停止方式。链接和二维码含访问凭据，仅交给本次用户，不上传公共图床、仓库或外部二维码网站。
-5. 明确“本机启动自检通过；另一设备连通尚未验证”。用户手机完成下载后才记录实际跨设备结果；电脑上的二维码解码、本机访问不等于手机验收。
-6. 用户要求提前停止时执行stop，等待stopped/expired并确认temporary_resources_removed。到期由后台程序强制执行，无需Agent定时提醒：
+   只有 `state=ready` 且 `can_publish=true` 才立即展示二维码、本机链接、截止时间和文件清单。共享文件夹模式附 `shared_folder`。程序已核验文件读取，无需额外下载或解码二维码。仍在 `preparing` 时及时告知用户文件正在准备，继续核验同一会话。失败、过期或进程不可核验时报告结果，避免反复创建新会话。二维码和链接只交给本次用户，说明 HTTP 未加密以及接收设备连通仍需扫码确认。
+
+用户要求提前停止时执行 `stop`，核对 `stopped` 或 `expired` 及临时资源状态。后台程序会自动到期：
    ```sh
    <python> <scripts>/lan_share.py stop --work-dir <runtime> --id <session_id>
    ```

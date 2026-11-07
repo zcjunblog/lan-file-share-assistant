@@ -20,12 +20,21 @@ def main():
         p.add_argument('--work-dir', required=True, help='独立私有任务目录的物理绝对路径')
         if command in ('_probe', '_worker', 'status', 'stop'):
             p.add_argument('--id', required=True)
+        if command == 'status':
+            p.add_argument('--wait-seconds', type=int, choices=range(16), default=0,
+                           help='在本次调用内等待准备完成，最长15秒')
         if command in ('preflight', 'start', 'quick-folder'):
             if command != 'quick-folder':
                 scope = p.add_mutually_exclusive_group(required=True)
                 scope.add_argument('--file', action='append', help='每项必须已获用户授权；使用绝对物理路径')
                 scope.add_argument('--folder', action='store_true', help='创建空共享文件夹，放入其中的顶层文件自动分享')
-                p.add_argument('--probe-id')
+                if command == 'start':
+                    lifecycle = p.add_mutually_exclusive_group()
+                    lifecycle.add_argument('--probe-id')
+                    lifecycle.add_argument('--chat', action='store_true',
+                                           help='内置启动探针，待独立status调用核验后再交付')
+                else:
+                    p.add_argument('--probe-id')
             else:
                 p.add_argument('--open-local', action='store_true', help='在 Windows 打开本机文件夹和二维码')
             p.add_argument('--title', default='文件分享')
@@ -46,8 +55,10 @@ def main():
         return None
     if args.command == 'probe':
         return preflight.start_probe(root)
-    if args.command in ('status', 'stop'):
-        return getattr(session, args.command)(workspace(root), args.id)
+    if args.command == 'status':
+        return session.wait_status(workspace(root), args.id, args.wait_seconds)
+    if args.command == 'stop':
+        return session.stop(workspace(root), args.id)
     direct = args.command == 'quick-folder'
     paths = [] if direct or args.folder else args.file
     request = dict(schema_version='1.0', title=args.title, file_paths=paths,
@@ -62,7 +73,7 @@ def main():
         preflight.validate_request(request, paths)
         return quick_folder(request, root, attestation, args.open_local)
     if args.command == 'start':
-        return session.start(request, root, paths, attestation, args.probe_id)
+        return session.start(request, root, paths, attestation, args.probe_id, chat=args.chat)
     return {'preflight': preflight.run(request, root, paths, attestation, args.probe_id)[1], 'can_publish': False}
 
 

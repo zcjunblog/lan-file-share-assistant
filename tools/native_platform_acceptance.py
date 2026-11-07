@@ -344,6 +344,7 @@ def backend_tests(release=False):
     suite = unittest.defaultTestLoader.discover(str(REPO / 'tests'), pattern=pattern)
     if not release:
         suite.addTests(unittest.defaultTestLoader.discover(str(REPO / 'tests'), pattern='test_live_folder.py'))
+        suite.addTests(unittest.defaultTestLoader.discover(str(REPO / 'tests'), pattern='test_chat_share.py'))
     result = ScrubbedTestResult()
     # Capture incidental output; only the whitelist below reaches hosted logs.
     from contextlib import redirect_stdout, redirect_stderr

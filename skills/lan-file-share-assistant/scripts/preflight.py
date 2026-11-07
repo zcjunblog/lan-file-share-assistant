@@ -116,13 +116,19 @@ def verify_probe(root, probe_id):
     raise ShareError('lifecycle_unverified', '进程探针无新心跳、未完成受控停止或凭证已过时。', '重新运行probe，在下一次工具调用的60秒内复检；不要复用M1记录。')
 
 
-def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worker_verified=False, reserved_bytes=0):
+def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worker_verified=False,
+        reserved_bytes=0, inline_probe=False):
     """host_attestation is supplied by the caller, never read from a request file."""
     validate_request(req, authorized_paths)
     normalized = dict(req)
     checks, manifest, root = [], [], None
 
     def check(item, operation, evidence='observed'):
+        if inline_probe and checks and checks[-1]['status'] != 'pass':
+            checks.append(dict(id=item, status='unknown', reason_code='prior_check_failed',
+                               summary='前置检查未通过，跳过此项。', evidence='not_tested',
+                               remediation=['先处理第一项失败原因。'], elapsed_ms=0))
+            return
         began = time.monotonic()
         try:
             summary = operation()
@@ -207,10 +213,14 @@ def run(req, root_path, authorized_paths, host_attestation, probe_id=None, worke
 
     def lifecycle():
         ContinuousClock()
-        if not worker_verified:
-            if root is None:
-                raise ShareError('lifecycle_unverified', '私有工作目录不可用，无法核验进程探针。')
-            verify_probe(root, probe_id)
+        if worker_verified:
+            return '服务进程已运行，原生含休眠时钟可调用。'
+        if root is None:
+            raise ShareError('lifecycle_unverified', '私有工作目录不可用，无法核验进程探针。')
+        if inline_probe:
+            verify_probe(root, start_probe(root)['probe_id'])
+            return '原生含休眠时钟和本机探针受控停止已核验。交付前需独立核验服务状态。'
+        verify_probe(root, probe_id)
         return '原生含休眠时钟可调用，跨调用进程心跳与受控停止已核验。'
 
     check('host_context', host, req['host_context']['evidence'] if req['host_context']['kind'] == 'local' else 'observed')

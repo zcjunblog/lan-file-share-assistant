@@ -83,7 +83,7 @@ WorkBuddy首轮60秒测试中，工具调用延迟使下载落在截止之后，
 
 ## 共享文件夹
 
-在 Agent 中先执行 `probe`，随后在独立调用的 `start` 里用 `--folder` 代替 `--file`。`status` 确认可用后会返回 `shared_folder`、二维码和截止时间。把文件放入这个新建目录，手机扫码页面会自动更新，也可手动刷新。每个会话新建一个空目录，停止或到期后电脑里的文件仍保留。
+在 Agent 中使用 `start --chat --folder`，再由下一次独立 `status` 调用核验。可用后会返回 `shared_folder`、二维码和截止时间。把文件放入这个新建目录，手机扫码页面会自动更新，也可手动刷新。每个会话新建一个空目录，停止或到期后电脑里的文件仍保留。
 
 目录顶层最多共享20个普通文件，单个2GiB、合计5GiB。文件连续两次观察稳定后出现在页面。复制大文件时，可先在其他目录完成写入再移入。替换或移走文件会撤销原下载入口。符号链接、硬链接、Windows重解析点、隐藏项、常见临时文件和子目录不参与共享。
 
@@ -98,4 +98,4 @@ py -3 -m venv .venv
 
 此后双击 `start-folder-windows.cmd`。启动器优先用该环境，执行本机预检，成功后打开专用文件夹和二维码图片。默认有效期10分钟。终端会显示截止时间，也可按回车提前停止。多网卡时先在本机终端用 `interfaces` 查询，再给 `quick-folder` 指定 `--bind-address`。状态目录为 `$env:LOCALAPPDATA\lan-file-share-assistant`。
 
-`quick-folder` 供用户在文件所在电脑的终端直接运行。Agent 仍按分开的 `probe`、`start` 和 `status` 验证宿主。命令中的 `command_ms`、各预检项的 `elapsed_ms` 和 `worker_ready_ms` 可定位进入脚本后的耗时。Python 安装、依赖下载、客户端排队和 Agent 等待需分别记录。
+`quick-folder` 供用户在文件所在电脑的终端直接运行。Agent 使用 `start --chat` 和独立 `status --wait-seconds 15`。第一条命令把预检、受控探针和会话准备合在一起，返回会话编号；第二条命令独立检查真实服务心跳和带随机挑战的健康接口，再返回二维码。旧版三步接口仍可用于诊断。命令中的 `command_ms`、各预检项的 `elapsed_ms` 和 `worker_ready_ms` 可定位进入脚本后的耗时。Python 安装、依赖下载、客户端排队和 Agent 等待需分别记录。

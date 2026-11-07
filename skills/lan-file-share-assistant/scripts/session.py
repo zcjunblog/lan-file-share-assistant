@@ -48,8 +48,9 @@ def clean(directory):
             path.unlink(missing_ok=True)
 
 
-def start(req, root_path, authorized_paths, host_attestation, probe_id):
-    normalized, report, manifest = run(req, root_path, authorized_paths, host_attestation, probe_id)
+def start(req, root_path, authorized_paths, host_attestation, probe_id, *, chat=False):
+    normalized, report, manifest = run(req, root_path, authorized_paths, host_attestation, probe_id,
+                                       inline_probe=chat)
     if not report['can_start']:
         return {'preflight': report, 'state': 'blocked', 'can_publish': False}
     root = workspace(root_path)
@@ -84,6 +85,8 @@ def start(req, root_path, authorized_paths, host_attestation, probe_id):
                 'summary': '本机准备或执行失败，未开放分享。',
                 'remediation': ['检查专用目录空间、权限和程序执行条件后重新预检。'],
                 'temporary_resources_removed': resources_removed(directory)}
+    if chat:
+        return {'session_id': session_id, 'state': 'preparing', 'can_publish': False, 'preflight': report}
     # Large copies stay preparing; no unverified URL is exposed.
     until = time.monotonic() + 2
     while time.monotonic() < until:
@@ -285,6 +288,17 @@ def status(root, session_id):
     if 'worker_ready_ms' in state:
         result['worker_ready_ms'] = state['worker_ready_ms']
     return result
+
+
+def wait_status(root, session_id, seconds):
+    until = time.monotonic() + seconds
+    while True:
+        result = status(root, session_id)
+        waiting = result['state'] == 'preparing' or result.get('reason_code') == 'heartbeat_stale'
+        remaining = until - time.monotonic()
+        if not waiting or remaining <= 0:
+            return result
+        time.sleep(min(.15, remaining))
 
 
 def stop(root, session_id):
