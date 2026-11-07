@@ -6,8 +6,8 @@
     {
       "profile": "standard",
       "archive": "lan-file-share-assistant-0.2.0.zip",
-      "bytes": 304026,
-      "sha256": "b2069ae6e475fabc382e5f5ddb5be7f26ee31f78f1c289178790e0a693754385",
+      "bytes": 304130,
+      "sha256": "19413a79ea57bd7e7b8e3996331c3cd0900801763efa3df8fa54707cd2cd0de9",
       "files": [
         {
           "path": "SKILL.md",
@@ -59,7 +59,7 @@
         },
         {
           "path": "scripts/live_folder.py",
-          "sha256": "5c42f1a42d04d0fa88f708211950db8b2f6d2dabe53045dec16087a00a0b3509"
+          "sha256": "a5ace3c0a89ae68c348e8cb16878591ec011ce307e1e712a3d33acd542e9cc84"
         },
         {
           "path": "scripts/preflight.py",
@@ -82,8 +82,8 @@
     {
       "profile": "workbuddy",
       "archive": "lan-file-share-assistant-workbuddy-0.2.0.zip",
-      "bytes": 304908,
-      "sha256": "772fca42a56456f38d3d21134e6e02aee38141ed7a4123f7d72fe807fec4476a",
+      "bytes": 305012,
+      "sha256": "1540c5b79e401c0d7aa714a29f3f72fd7e23be059057dbcd30d1d067dcae3b40",
       "files": [
         {
           "path": "SKILL.md",
@@ -135,7 +135,7 @@
         },
         {
           "path": "scripts/live_folder.py",
-          "sha256": "5c42f1a42d04d0fa88f708211950db8b2f6d2dabe53045dec16087a00a0b3509"
+          "sha256": "a5ace3c0a89ae68c348e8cb16878591ec011ce307e1e712a3d33acd542e9cc84"
         },
         {
           "path": "scripts/preflight.py",

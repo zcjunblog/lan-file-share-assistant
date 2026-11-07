@@ -307,11 +307,20 @@ class ScrubbedTestResult(unittest.TestResult):
 
     def addError(self, test, err):
         super().addError(test, err)
-        self.scrubbed.append({'test': test.id(), 'type': err[0].__name__, 'causes': error_codes(err[1])})
+        self.record(test, err)
 
     def addFailure(self, test, err):
         super().addFailure(test, err)
-        self.scrubbed.append({'test': test.id(), 'type': err[0].__name__, 'causes': error_codes(err[1])})
+        self.record(test, err)
+
+    def record(self, test, err):
+        item = {'test': test.id(), 'type': err[0].__name__, 'causes': error_codes(err[1])}
+        frame = err[2]
+        while frame is not None:
+            if Path(frame.tb_frame.f_code.co_filename).name.startswith('test_'):
+                item['test_line'] = frame.tb_lineno
+            frame = frame.tb_next
+        self.scrubbed.append(item)
 
 
 def error_codes(error):

@@ -70,11 +70,21 @@ class LiveFolder:
                     continue
                 try:
                     name.encode('utf-8')
-                    info = os.stat(entry.path, follow_symlinks=False) if sys.platform == 'win32' else entry.stat(follow_symlinks=False)
+                    info = entry.stat(follow_symlinks=False)
+                    if sys.platform == 'win32':
+                        if not stat.S_ISREG(info.st_mode) or info.st_file_attributes & 0x402:
+                            continue
+                        # Windows path stat and descriptor stat can report different
+                        # metadata. Use the same safe native open as download.
+                        fd = safe_open(self.path / name)
+                        try:
+                            info = os.fstat(fd)
+                        finally:
+                            os.close(fd)
                     if eligible(info):
                         entries[name] = identity(info)
-                except (FileNotFoundError, UnicodeEncodeError):
-                    continue  # File was removed during directory enumeration.
+                except (FileNotFoundError, UnicodeEncodeError, ShareError):
+                    continue  # The entry disappeared, is still open for writing or is unsafe.
         if len(entries) > 20 or sum(item[3] for item in entries.values()) > 5 * 1024 ** 3:
             raise ShareError('folder_capacity', '共享文件夹最多20个文件、合计5GiB，请移走部分文件。')
         return entries
