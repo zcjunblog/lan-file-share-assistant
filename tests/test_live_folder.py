@@ -12,7 +12,7 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'skills/lan-file-share-assistant/scripts'))
-from core import Deadline, private_mkdir, utc
+from core import Deadline, private_mkdir, utc, workspace
 from http_service import ShareServer
 from live_folder import LiveFolder
 
@@ -20,7 +20,7 @@ from live_folder import LiveFolder
 class LiveFolderTests(unittest.TestCase):
     def test_same_link_updates_and_revokes_old_file_ids(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary).resolve()
+            root = workspace(Path(temporary).resolve() / 'runtime')
             folder = private_mkdir(root / 'shared-files')
             live = LiveFolder(folder)
             state = {'title': '合成共享目录', 'files': [], 'expires_at': utc(time.time() + 60)}
