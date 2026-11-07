@@ -126,5 +126,5 @@
 - [x] 修正范围。用户的十几分钟等待来自在 AI 对话里要求分享指定文件。
 - [x] 用合成61秒凭证复现旧版探针失效，并核对旧 WorkBuddy 调用延迟记录。
 - [x] 实现并验证两次独立调用、失败即反馈、首步无链接和二维码输出、第二步真实健康核验。候选双包在 macOS 解压验证通过。
-- [ ] 核对原生 Windows/Linux CI 和候选包公开下载摘要。
+- [x] Windows Server 2022、Ubuntu 24.04 各 Python 3.9 和 3.12 四组[原生 CI](https://github.com/zcjunblog/lan-file-share-assistant/actions/runs/42379832105)通过。`bd2d7e2` 两个候选包可匿名下载且摘要与本地一致。
 - [ ] 在用户 Windows 客户端使用同一句指定文件指令，记录从发送指令到二维码可见的完整耗时及各阶段。真实 Windows 客户端耗时尚未知。
